@@ -34,6 +34,7 @@ const nextConfig = {
         hostname: "cdn.prod.website-files.com",
         pathname: "/**",
       },
+      
     ],
   },
 };

@@ -275,6 +275,7 @@ export default function FerrymanLanding() {
           </div>
         </div>
 
+
         {/* Supported Platforms */}
         <div className="text-center mb-20 border-t border-gray-200 pt-16">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-8 letter-spacing">Supported platforms</p>
