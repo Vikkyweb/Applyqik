@@ -24,3 +24,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Primary:
+#4F46E5
+(Indigo 600)
+
+Secondary:
+#7C3AED
+(Violet 600)
+
+Accent:
+#22D3EE
+(Cyan)
+
+Background:
+#F8FAFC
+(Slate 50)
+
+Dark:
+#0F172A
+(Slate 900)
+
+Success:
+#10B981
+(Emerald) */
