@@ -1,14 +1,90 @@
 "use client";
 
-import { ArrowBigRight, ArrowBigRightDash, Menu, UserRound, X } from 'lucide-react'
-import React from 'react'
-import { useState } from 'react';
+import {
+  ArrowBigRight,
+  ArrowBigRightDash,
+  BarChart3,
+  Briefcase,
+  Calendar,
+  ChevronDown,
+  FileText,
+  Menu,
+  PencilLine,
+  Puzzle,
+  Search,
+  UserPlus,
+  UserRound,
+  Wand2,
+  X,
+} from 'lucide-react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { FaTwitter } from 'react-icons/fa'
 import { LuArrowBigRight } from 'react-icons/lu';
+import { AnimatePresence, motion } from 'framer-motion';
+
+// Mega-menu content for the "Features" nav item.
+// Two link columns + a live preview card, mirroring how the product actually helps.
+const FEATURE_COLUMNS = [
+  {
+    title: 'Apply faster',
+    items: [
+      { label: 'AI Resume Tailor', description: 'Match your resume to any job', icon: Wand2 },
+      { label: 'Cover Letter Generator', description: 'Draft one in under a minute', icon: FileText },
+      { label: 'Application Autofill', description: 'Skip the repetitive forms', icon: PencilLine },
+      { label: 'Resume Keyword Scanner', description: 'Find what you\u2019re missing', icon: Search },
+    ],
+  },
+  {
+    title: 'Stay organized',
+    items: [
+      { label: 'Job Tracker', description: 'Every application in one board', icon: Briefcase },
+      { label: 'Contact Tracker', description: 'Keep recruiters and referrals close', icon: UserPlus },
+      { label: 'Interview Tracker', description: 'Never miss a follow-up', icon: Calendar },
+      { label: 'Job Search Metrics', description: 'See what\u2019s actually working', icon: BarChart3 },
+    ],
+  },
+];
 
 function Header() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
+  const [featuresOpen, setFeaturesOpen] = useState(false);
+
+  const featuresRef = useRef(null);
+  const closeTimer = useRef(null);
+
+  const openFeatures = () => {
+    clearTimeout(closeTimer.current);
+    setFeaturesOpen(true);
+  };
+
+  const closeFeaturesDelayed = () => {
+    closeTimer.current = setTimeout(() => setFeaturesOpen(false), 150);
+  };
+
+  // Close on outside click and on Escape, so the dropdown behaves like a real menu.
+  useEffect(() => {
+    function handlePointerDown(event) {
+      if (featuresRef.current && !featuresRef.current.contains(event.target)) {
+        setFeaturesOpen(false);
+      }
+    }
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') setFeaturesOpen(false);
+    }
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  // Collapse the mobile accordion whenever the mobile menu itself closes.
+  useEffect(() => {
+    if (!mobileMenuOpen) setMobileFeaturesOpen(false);
+  }, [mobileMenuOpen]);
 
   return (
       <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
@@ -23,6 +99,96 @@ function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-12">
+            {/* Features — hover or click to open the mega menu */}
+            <div
+              ref={featuresRef}
+              className="relative"
+              onMouseEnter={openFeatures}
+              onMouseLeave={closeFeaturesDelayed}
+            >
+              <button
+                type="button"
+                onClick={() => setFeaturesOpen((open) => !open)}
+                aria-haspopup="true"
+                aria-expanded={featuresOpen}
+                className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-black transition relative group"
+              >
+                Features
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform duration-200 ${featuresOpen ? 'rotate-180' : ''}`}
+                />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
+              </button>
+
+              <AnimatePresence>
+                {featuresOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ duration: 0.18, ease: 'easeOut' }}
+                    role="menu"
+                    className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[min(92vw,720px)] origin-top rounded-2xl border border-gray-100 bg-white shadow-2xl shadow-gray-900/10 overflow-hidden"
+                  >
+                    <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1.1fr]">
+                      {FEATURE_COLUMNS.map((column) => (
+                        <div key={column.title} className="p-6 border-r border-gray-50 last:border-r-0">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-4">
+                            {column.title}
+                          </p>
+                          <ul className="space-y-1">
+                            {column.items.map(({ label, description, icon: Icon }) => (
+                              <li key={label}>
+                                <a
+                                  href="#"
+                                  role="menuitem"
+                                  onClick={() => setFeaturesOpen(false)}
+                                  className="flex items-start gap-3 rounded-xl px-2 py-2 -mx-2 hover:bg-gray-50 transition-colors"
+                                >
+                                  <Icon size={18} className="mt-0.5 shrink-0 text-gray-500" />
+                                  <span>
+                                    <span className="block text-sm font-semibold text-gray-900">{label}</span>
+                                    <span className="block text-xs text-gray-500">{description}</span>
+                                  </span>
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+
+                      {/* Preview panel — hidden on narrow desktop widths, shown from lg up */}
+                      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-emerald-50 to-emerald-100/60 p-6">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 mb-3">
+                            AI Resume Tailor
+                          </p>
+                          <div className="rounded-xl bg-white border border-emerald-100 p-4 shadow-sm">
+                            <p className="text-xs font-medium text-gray-500 mb-2">
+                              8 of 12 keywords matched
+                            </p>
+                            <div className="h-2 w-full rounded-full bg-gray-100 overflow-hidden flex">
+                              <div className="h-full bg-emerald-500" style={{ width: '67%' }} />
+                              <div className="h-full bg-rose-300" style={{ width: '33%' }} />
+                            </div>
+                            <div className="flex items-center justify-between mt-2 text-[11px] font-medium">
+                              <span className="text-emerald-600">8 Matched</span>
+                              <span className="text-rose-500">4 Missing</span>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-600 leading-relaxed mt-4">
+                          Applyqik compares your resume against the job description and shows
+                          exactly which keywords are missing, before you hit apply.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <a href="#demo" className="text-sm font-medium text-gray-600 hover:text-black transition relative group">
               Demo
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
@@ -78,7 +244,48 @@ function Header() {
           </div>
 
           {/* Mobile Nav Items */}
-          <div className="flex-1 p-6 space-y-2">
+          <div className="flex-1 p-6 space-y-2 overflow-y-auto">
+            {/* Features accordion */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileFeaturesOpen((open) => !open)}
+                aria-expanded={mobileFeaturesOpen}
+                className="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition"
+              >
+                Features
+                <ChevronDown
+                  size={18}
+                  className={`transition-transform duration-200 ${mobileFeaturesOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+              <AnimatePresence initial={false}>
+                {mobileFeaturesOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pl-2 py-1 space-y-1">
+                      {FEATURE_COLUMNS.flatMap((column) => column.items).map(({ label, icon: Icon }) => (
+                        <a
+                          key={label}
+                          href="#"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition"
+                        >
+                          <Icon size={16} className="text-gray-400" />
+                          {label}
+                        </a>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <a 
               href="#demo" 
               className="block px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition"
