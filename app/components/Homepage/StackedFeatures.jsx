@@ -119,12 +119,12 @@ const BASE_TOP = 'top-[3rem] sm:top-[3.5rem]';
 
 export default function StackedFeatures() {
   return (
-    <section className="relative bg-[#0B0D12] py-20 sm:py-32">
+    <section className="relative bg-gray-100 py-20 sm:py-32">
       <div className="mx-auto max-w-2xl px-6 text-center mb-16 sm:mb-24">
         <span className="inline-block text-xs font-medium tracking-[0.2em] uppercase text-[#8B90A0] mb-4">
           How it works
         </span>
-        <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-[#F5F3EF] leading-[1.1]">
+        <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-black leading-[1.1]">
           From website to app store,
           <br className="hidden sm:block" /> in five steps
         </h2>

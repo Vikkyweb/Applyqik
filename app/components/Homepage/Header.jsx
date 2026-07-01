@@ -235,7 +235,7 @@ function Header() {
           className={`fixed top-0 right-0 w-64 h-screen bg-white shadow-xl z-40 transform transition-transform duration-500 ease-out md:hidden flex flex-col ${
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
-        >
+          >
           {/* Close Button */}
           <div className="flex justify-end p-4 border-b border-gray-100">
             <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">

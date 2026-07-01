@@ -30,9 +30,12 @@ import {
  */
 
 const steps = [
-  { n: 1, label: 'Sign in' },
-  { n: 2, label: 'Connect socials' },
-  { n: 3, label: 'Post on', icon: 'tiktok' },
+  { n: 1, label: 'Sign up' },
+  { n: 2, label: 'Update profile' },
+  { n: 3, label: 'Upload resume', },
+  { n: 4, label: 'AI hunts jobs' },
+  { n: 5, label: 'AI matches jobs' },
+  { n: 6, label: 'Review & Apply' },
 ];
 
 function TikTokBadge() {
@@ -92,7 +95,7 @@ export default function HowItWorks() {
                     {s.n}
                   </span>
                   {s.label}
-                  {s.icon === 'tiktok' && <TikTokBadge />}
+                  {/* {s.icon === 'tiktok' && <TikTokBadge />} */}
                 </span>
                 {i < steps.length - 1 && (
                   <span className="hidden text-neutral-300 sm:inline">·</span>
