@@ -1,8 +1,10 @@
 'use client';
 
 
-import HeroDiagram from './components/HeroDiagram';
+import HeroDiagram from './components/Homepage/HeroDiagram';
 import JobTrackerSection from './components/Homepage/JobTrackerSection';
+import StackedFeatures from './components/Homepage/StackedFeatures';
+import Testimonials from './components/Homepage/Testimonials';
 
 export default function Homepage() {
 
@@ -12,6 +14,8 @@ export default function Homepage() {
 
       <JobTrackerSection />
 
+      <StackedFeatures />
+      <Testimonials />
     </div>
   );
 }
