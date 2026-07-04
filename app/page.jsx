@@ -4,8 +4,11 @@
 import HeroDiagram from './components/Homepage/Hero';
 import HowItWorks from './components/Homepage/HowItWorks';
 import JobTrackerSection from './components/Homepage/JobTrackerSection';
-import StackedFeatures from './components/Homepage/StackedFeatures';
+import ProblemSolutionSection from './components/Homepage/ProblemSolution';
+import StackedFeaturess from './components/Homepage/StackedFeaturess';
 import Testimonials from './components/Homepage/Testimonials';
+import TrustSection from './components/Homepage/TrustSection';
+import PricingPage from './pricing/page';
 
 export default function Homepage() {
 
@@ -13,11 +16,17 @@ export default function Homepage() {
     <div className="min-h-dvh bg-white text-black">
       <HeroDiagram />
 
-      {/* <JobTrackerSection /> */}
+      <ProblemSolutionSection />
+
       <HowItWorks />  
 
-      <StackedFeatures />
+      <StackedFeaturess />
+
+      <TrustSection />
       <Testimonials />
+
+      <PricingPage />
+      
     </div>
   );
 }

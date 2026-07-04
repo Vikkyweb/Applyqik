@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check } from 'lucide-react';
+import Link from 'next/link';
 
 const YEARLY_DISCOUNT = 0.16;
 
@@ -68,18 +69,18 @@ function PlanCard({ plan, cycle }) {
   const price = formatPrice(plan.monthly, cycle);
 
   return (
-    <div className="flex flex-col h-full rounded-2xl border border-gray-200 bg-white p-7 sm:p-8">
-      <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
+    <div className="flex flex-col h-full rounded-2xl border border-border bg-background p-7 sm:p-8">
+      <h3 className="text-2xl font-bold text-foreground">{plan.name}</h3>
 
       <div className="mt-2 flex items-baseline gap-1">
-        <span className="text-4xl font-bold text-gray-900">${price.big}</span>
+        <span className="text-4xl font-bold text-foreground">${price.big}</span>
         <span className="text-base text-gray-500">/mo</span>
       </div>
       {price.note && <p className="mt-1 text-xs text-gray-500">{price.note}</p>}
 
       <div className="mt-6 flex-1">
         {plan.includesLabel && (
-          <p className="mb-3 text-sm italic text-gray-400">{plan.includesLabel}</p>
+          <p className="mb-3 text-sm italic text-gray-500">{plan.includesLabel}</p>
         )}
         <ul className="space-y-3">
           {plan.features.map((feature) => (
@@ -90,15 +91,15 @@ function PlanCard({ plan, cycle }) {
                 className="mt-0.5 shrink-0"
                 style={{ color: plan.checkColor }}
               />
-              <span className="text-[14.5px] leading-snug text-gray-700">{feature}</span>
+              <span className="text-[14.5px] leading-snug text-gray-500">{feature}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <button className="mt-8 w-full rounded-lg border border-gray-300 bg-white py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors">
+      <Link href="signup" className="mt-8 w-full rounded-xl text-center border border-gray-300 bg-white py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors">
         {plan.cta}
-      </button>
+      </Link>
     </div>
   );
 }
@@ -107,11 +108,11 @@ export default function PricingPage() {
   const [cycle, setCycle] = useState('monthly');
 
   return (
-    <div className="min-h-screen w-full bg-white">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
+    <div className="min-h-screen w-full bg-background text-foreground">
+      <div className="mx-auto max-w-6xl  px-4 sm:px-6 py-16 sm:py-20 lg:py-28">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground sm:leading-tight">
             Pricing
           </h1>
           <p className="mt-3 text-gray-500">Free to start. Upgrade when you're ready to move faster.</p>
@@ -143,21 +144,6 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <PlanCard key={plan.id} plan={plan} cycle={cycle} />
           ))}
-        </div>
-
-        {/* Trust strip */}
-        <div className="mt-14 flex items-center justify-center gap-3">
-          <div className="flex -space-x-2">
-            {['#2563EB', '#059669', '#D97706', '#DB2777', '#7C3AED'].map((color, i) => (
-              <div
-                key={i}
-                className="w-7 h-7 rounded-full border-2 border-white"
-                style={{ backgroundColor: color }}
-              />
-            ))}
-          </div>
-          <span className="text-sm text-gray-500">Loved by job seekers</span>
-          <span className="text-sm text-amber-500">★★★★★</span>
         </div>
       </div>
     </div>

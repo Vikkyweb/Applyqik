@@ -2,11 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { 
-  FaFacebook, 
-  FaInstagram, 
   FaLinkedin, 
-  FaYoutube, 
-  FaTiktok ,
   FaBuilding,
   FaBriefcase,
 } from 'react-icons/fa';
@@ -18,6 +14,7 @@ import {
 
 import { Briefcase, Check, Globe, Zap, FileCheck, Bot, UserRound, Sparkles, TrendingUp, Gift } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function HeroDiagram() {
     const containerRef = useRef(null);
@@ -146,7 +143,7 @@ export default function HeroDiagram() {
     const CurrentIcon = jobSources[active].icon;
 
   return (
-    <div className="w-full mx-auto bg-gradient-to-br from-gray-50 dark:from-gray-900 to-white dark:to-gray-800 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div className="w-full mx-auto bg-background py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -223,52 +220,16 @@ export default function HeroDiagram() {
 
         {/* Floating Cards - Left Side */}
         <div className="hidden lg:block absolute left-0 top-20 w-64 space-y-6 pointer-events-none">
-          {/* Resume Matching Card */}
-          <div className="float-card opacity-40 hover:opacity-60 transition-opacity duration-300">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-              <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500 mb-4">Resume Matching</h3>
-              <div className="flex items-center gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full border-4 border-blue-200 dark:border-blue-900 flex items-center justify-center bg-blue-50 dark:bg-blue-950">
-                    <span className="text-lg font-bold text-blue-400">92%</span>
-                  </div>
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-2 bg-blue-200 dark:bg-blue-900 rounded w-full"></div>
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Company Perks Card */}
-          <div className="float-card-alt opacity-40 hover:opacity-60 transition-opacity duration-300">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-              <div className="flex items-center gap-2 mb-4">
-                <Gift size={16} className="text-gray-400" />
-                <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500">Company Perks</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="h-3 bg-indigo-200 dark:bg-indigo-900 rounded"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Floating Cards - Right Side */}
-        <div className="hidden lg:block absolute right-0 top-20 w-64 space-y-6 pointer-events-none">
-          {/* Hiring Trends Card */}
+          {/* AI Job Hunting Card */}
           <div className="float-card-alt opacity-40 hover:opacity-60 transition-opacity duration-300">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp size={16} className="text-gray-400" />
-                <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500">Hiring Trends</h3>
+                <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500">AI Job Hunting</h3>
               </div>
               <div className="space-y-3">
-                <div className="h-3 bg-purple-200 dark:bg-purple-900 rounded w-5/6"></div>
+                <div className="h-3 bg-purple-200 dark:bg-indigo-900 rounded w-5/6"></div>
                 <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
               </div>
@@ -290,8 +251,45 @@ export default function HeroDiagram() {
           </div>
         </div>
 
+        {/* Floating Cards - Right Side */}
+        <div className="hidden lg:block absolute right-0 top-20 w-64 space-y-6 pointer-events-none">
+          {/* Resume Matching Card */}
+          <div className="float-card opacity-40 hover:opacity-60 transition-opacity duration-300">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+              <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500 mb-4">Resume Matching</h3>
+              <div className="flex items-center gap-4">
+                <div className="shrink-0">
+                  <div className="w-16 h-16 rounded-full border-4 border-blue-200 dark:border-blue-900 flex items-center justify-center bg-blue-50 dark:bg-blue-950">
+                    <span className="text-lg font-bold text-blue-400">92%</span>
+                  </div>
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-2 bg-blue-200 dark:bg-blue-900 rounded w-full"></div>
+                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Track Interviews Card */}
+          <div className="float-card-alt opacity-40 hover:opacity-60 transition-opacity duration-300">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2 mb-4">
+                <Gift size={16} className="text-gray-400" />
+                <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500">Track Interviews</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="h-3 bg-indigo-200 dark:bg-indigo-900 rounded"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="text-center mb-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-50 to-indigo-50 px-4 py-2 rounded-full text-xs font-semibold text-gray-700 border border-green-200">
+          <div className="inline-flex items-center justify-center gap-3 bg-linear-to-r from-green-50 to-indigo-50 px-4 py-2 rounded-full text-xs font-semibold text-gray-700 border border-green-200">
             <span className="text-gray-600">Hunting across 5+ relevant job sources</span>
             <span className="text-green-600">→</span>
           </div>
@@ -299,13 +297,9 @@ export default function HeroDiagram() {
 
         {/* Headline */}
         <div className="lg:max-w-[50%] m-auto text-center mb-8 ">
-          <h1 className="text-4xl md:text-4xl font-bold leading-tight text-gray-900">
+          <h1 className="text-4xl md:text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-foreground mb-4">
             Your AI career agent, working while you sleep.
           </h1>
-
-          {/* <h1 className="text-5xl sm:text-6xl lg:text-2xl font-black leading-tight mb-4 tracking-tight text-[#0B0D12]">
-            Your AI career agent that finds the right jobs, matches your skills, and prepares your applications.
-          </h1> */}
 
           {/* <div className="flex items-center
             justify-center
@@ -353,16 +347,13 @@ export default function HeroDiagram() {
 
         {/* Subheading */}
         <div className="text-center mb-3 max-w-2xl mx-auto">
-          {/* <p>
-            Stop spending hours searching and applying. JobPilot continuously discovers opportunities, analyzes your fit, and helps you prepare stronger applications — while you focus on your career.
-          </p> */}
-            <p className="mt-4 text-lg text-gray-600 max-w-xl">
-              Finds the right jobs, matches your skills, and prepares your applications — automatically.
-            </p>
+          <p className="mt-4 text-lg text-gray-600 max-w-xl">
+            Finds the right jobs, matches your skills, and prepares your applications — automatically.
+          </p>
         </div>
 
         {/* Distribution Diagram */}
-        <div className="mb-16 lg:mb-10 lg:max-w-[80%] m-auto">
+        <div className="lg:mb-0 lg:max-w-[80%] m-auto">
           <div 
             ref={containerRef}
             className="relative flex items-center justify-center"
@@ -438,13 +429,13 @@ export default function HeroDiagram() {
                   className="relative animate-fade-in"
                   style={{ animationDelay: `${(idx + 3) * 100}ms` }}
                 >
-                  <div className="w-16 h-16 rounded-full border-4 border-gray-100 dark:border-gray-700 flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all duration-300 icon-hover">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-4 border-gray-100 dark:border-gray-700 flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all duration-300 icon-hover">
                     {/* <platform.Icon className="w-8 h-8" style={{ color: platform.color }} /> */}
-                    <Image src={`${platform.Icon}`} alt='' height={100} width={100}/>
+                    <Image src={`${platform.Icon}`} className="w-6 h-6 md:w-8 md:h-8" alt='' height={100} width={100}/>
                   </div>
-                  <div className="absolute -top-2 -right-2 w-7 h-7 bg-green-500 rounded-full border-3 border-white dark:border-gray-800 flex items-center justify-center animate-pulse-badge" style={{ animationDelay: `${(idx + 3) * 100}ms` }}>
+                  {/* <div className="absolute -top-2 -right-2 w-7 h-7 bg-green-500 rounded-full border-3 border-white dark:border-gray-800 flex items-center justify-center animate-pulse-badge" style={{ animationDelay: `${(idx + 3) * 100}ms` }}>
                     <Check size={14} className="text-white" strokeWidth={3} />
-                  </div>
+                  </div> */}
                 </div>
               ))}
             </div>
@@ -482,11 +473,11 @@ export default function HeroDiagram() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-7 lg:mt-10 hidden md:block">
-          <button className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold transition">
+        <div className="text-center mt-7 lg:mt-10  md:block">
+          <Link href="/signin" className="inline-flex items-center gap-2 bg-primary hover:bg-secondary text-white px-8 py-3 rounded-xl font-semibold transition">
             <Briefcase size={18} />
             Start Smart Job Hunting
-          </button>
+          </Link>
         </div>
       </div>
     </div>

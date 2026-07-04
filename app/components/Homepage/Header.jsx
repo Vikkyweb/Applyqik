@@ -19,9 +19,10 @@ import {
 } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { FaTwitter } from 'react-icons/fa'
 import { LuArrowBigRight } from 'react-icons/lu';
 import { AnimatePresence, motion } from 'framer-motion';
+import ThemeSwitcher from './ThemeSwitcher';
+import Link from 'next/link';
 
 // Mega-menu content for the "Features" nav item.
 // Two link columns + a live preview card, mirroring how the product actually helps.
@@ -46,7 +47,7 @@ const FEATURE_COLUMNS = [
   },
 ];
 
-function Header() {
+export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
   const [featuresOpen, setFeaturesOpen] = useState(false);
@@ -87,15 +88,15 @@ function Header() {
   }, [mobileMenuOpen]);
 
   return (
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
+      <header className="sticky top-0 z-50 bg-background border-b border-border">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+          <Link href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
+            <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
               ⚓
             </div>
             <span className="font-black text-lg tracking-tight">Applyqik</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-12">
@@ -111,7 +112,7 @@ function Header() {
                 onClick={() => setFeaturesOpen((open) => !open)}
                 aria-haspopup="true"
                 aria-expanded={featuresOpen}
-                className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-black transition relative group"
+                className="flex items-center gap-1 text-sm font-medium text-foreground hover:text-black transition relative group"
               >
                 Features
                 <ChevronDown
@@ -140,7 +141,7 @@ function Header() {
                           <ul className="space-y-1">
                             {column.items.map(({ label, description, icon: Icon }) => (
                               <li key={label}>
-                                <a
+                                <Link
                                   href="#"
                                   role="menuitem"
                                   onClick={() => setFeaturesOpen(false)}
@@ -151,7 +152,7 @@ function Header() {
                                     <span className="block text-sm font-semibold text-gray-900">{label}</span>
                                     <span className="block text-xs text-gray-500">{description}</span>
                                   </span>
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
@@ -189,31 +190,34 @@ function Header() {
               </AnimatePresence>
             </div>
 
-            <a href="#demo" className="text-sm font-medium text-gray-600 hover:text-black transition relative group">
+            <Link href="#demo" className="text-sm font-medium text-foreground hover:text-black transition relative group">
               Demo
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="#testimonials" className="text-sm font-medium text-gray-600 hover:text-black transition relative group">
+            </Link>
+            <Link href="#testimonials" className="text-sm font-medium text-foreground hover:text-black transition relative group">
               Testimonials
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="#pricing" className="text-sm font-medium text-gray-600 hover:text-black transition relative group">
+            </Link>
+            <Link href="#pricing" className="text-sm font-medium text-foreground hover:text-black transition relative group">
               Pricing
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </Link>
           </div>
+
+          <ThemeSwitcher/>
 
           {/* CTA and Mobile Menu */}
           <div className="flex items-center gap-4">
-            <button className="hidden md:flex items-center gap-2 px-5 py-2 border border-black rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
+            <Link href="/signup" className="hidden md:flex items-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
               <LuArrowBigRight size={16} />
-                SignUp for free
-            </button>
+              SignUp for free
+            </Link>
 
-            <button className="hidden md:flex items-center gap-2 px-5 py-2 border border-black rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
+            <Link href="/signin" className="hidden md:flex items-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
               <UserRound size={16} />
-             SignIn
-            </button>
+              SignIn
+            </Link>
+
             <button 
               className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -221,6 +225,7 @@ function Header() {
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
+
         </nav>
 
         {/* Mobile Menu - Slides from Right */}
@@ -232,12 +237,19 @@ function Header() {
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         />
         <div
-          className={`fixed top-0 right-0 w-64 h-screen bg-white shadow-xl z-40 transform transition-transform duration-500 ease-out md:hidden flex flex-col ${
+          className={`fixed top-0 right-0 w-64 h-screen bg-background shadow-xl z-40 transform transition-transform duration-500 ease-out md:hidden flex flex-col ${
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           >
           {/* Close Button */}
-          <div className="flex justify-end p-4 border-b border-gray-100">
+          <div className="flex justify-between p-4 border-b border-border">
+            <Link href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
+              <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                ⚓
+              </div>
+              <span className="font-black text-lg tracking-tight">Applyqik</span>
+            </Link>
+
             <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
               <X size={24} />
             </button>
@@ -251,7 +263,7 @@ function Header() {
                 type="button"
                 onClick={() => setMobileFeaturesOpen((open) => !open)}
                 aria-expanded={mobileFeaturesOpen}
-                className="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition"
+                className="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-foreground hover:bg-gray-50 rounded-lg transition"
               >
                 Features
                 <ChevronDown
@@ -270,15 +282,15 @@ function Header() {
                   >
                     <div className="pl-2 py-1 space-y-1">
                       {FEATURE_COLUMNS.flatMap((column) => column.items).map(({ label, icon: Icon }) => (
-                        <a
+                        <Link
                           key={label}
                           href="#"
                           onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-gray-50 hover:text-black rounded-lg transition"
                         >
                           <Icon size={16} className="text-gray-400" />
                           {label}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </motion.div>
@@ -286,45 +298,43 @@ function Header() {
               </AnimatePresence>
             </div>
 
-            <a 
+            <Link 
               href="#demo" 
-              className="block px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition"
+              className="block px-4 py-3 text-base font-medium text-foreground hover:bg-gray-50 rounded-lg transition"
               onClick={() => setMobileMenuOpen(false)}
             >
               Demo
-            </a>
-            <a 
+            </Link>
+            <Link 
               href="#testimonials" 
-              className="block px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition"
+              className="block px-4 py-3 text-base font-medium text-foreground hover:bg-gray-50 rounded-lg transition"
               onClick={() => setMobileMenuOpen(false)}
             >
               Testimonials
-            </a>
-            <a 
+            </Link>
+            <Link 
               href="#pricing" 
-              className="block px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition"
+              className="block px-4 py-3 text-base font-medium text-foreground hover:bg-gray-50 rounded-lg transition"
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
-            </a>
+            </Link>
           </div>
 
           {/* Mobile CTA */}
-          <div className="p-6 border-t border-gray-100">
-            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-900 transition mb-4">
+          <div className="p-6 border-t border-border">
+            <Link href="/signin" className="w-full flex items-center justify-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300 mb-4">
               <UserRound size={18} />
               SignIn
-            </button>
+            </Link>
 
-            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-900 transition">
+            <Link href="/signup" className="w-full flex items-center justify-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
               <ArrowBigRightDash size={18} />
               SignUp for free
-            </button>
-
+            </Link>
           </div>
         </div>
       </header>
   )
 }
 
-export default Header

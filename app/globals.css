@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -23,31 +23,77 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+} */
+
+:root {
+
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+
+  --primary: #4F46E5;
+  --secondary: #7C3AED;
+  --accent: #22D3EE;
+  --success: #10B981;
+  --border: #E5E7EB;
+
 }
 
-/* bg-[#0B0D12] */
-/* #442DE2 */
 
-/* Primary:
-#4F46E5
-(Indigo 600)
+.dark {
 
-Secondary:
-#7C3AED
-(Violet 600)
+  --background: #0F172A;
+  --foreground: #F8FAFC;
 
-Accent:
-#22D3EE
-(Cyan)
+  --primary: #818CF8;
+  --secondary: #A78BFA;
+  --accent: #67E8F9;
+  --success: #34D399;
+  --border: #1E293B;
 
-Background:
-#F8FAFC
-(Slate 50)
+}
 
-Dark:
-#0F172A
-(Slate 900)
 
-Success:
-#10B981
-(Emerald) */
+
+@theme inline {
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-border: var(--border);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+}
+
+
+
+body {
+
+  background: var(--background);
+  color: var(--foreground);
+
+}
+
+a{
+  cursor: pointer;
+}
+
+/* subtle focus ring that matches the brand */
+.gusto-focus:focus {
+  outline: none;
+  border-color: #2e6e71;
+  box-shadow: 0 0 0 3px rgba(46, 110, 113, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
