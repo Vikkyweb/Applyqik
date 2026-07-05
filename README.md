@@ -34,3 +34,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+    // const destinationPlatforms = [
+    //     { Icon: 'https://cdn.prod.website-files.com/6668a687e71e2722fccb8357/679a83f29b0fde85378eb397_gh_Icon-greenhouse-green.png', name: 'Greenhouse', color: '#1877F2' },
+    //     { Icon: 'https://www.lever.co/images/favicon-lever.png', name: 'Lever', color: '#0A66C2' },
+    //     { Icon: 'https://www.ashbyhq.com/favicon.png', name: 'Ashbyhq', color: '#E4405F' },
+    //     { Icon: 'https://wellfound.com/wellfound-favicon-57x.png', name: 'Wellfound', color: '#FF0000' },
+    //     { Icon: 'https://bookface-static.ycombinator.com/assets/ycdc/favicon-c8a914eeeba9fe6f7a863b35608b55aeedd7c1ff409c97b9ecb96b7a6c278d70.ico', name: 'YCombinator', color: '#000000' },
+    //     { Icon: 'https://remoteok.com/assets/logo-square.png', name: 'RemoteOK', color: '#000000' },
+    // ];

@@ -30,12 +30,12 @@ export default function HeroDiagram() {
     ];
 
     const destinationPlatforms = [
-        { Icon: 'https://cdn.prod.website-files.com/6668a687e71e2722fccb8357/679a83f29b0fde85378eb397_gh_Icon-greenhouse-green.png', name: 'Greenhouse', color: '#1877F2' },
-        { Icon: 'https://www.lever.co/images/favicon-lever.png', name: 'Lever', color: '#0A66C2' },
-        { Icon: 'https://www.ashbyhq.com/favicon.png', name: 'Ashbyhq', color: '#E4405F' },
-        { Icon: 'https://wellfound.com/wellfound-favicon-57x.png', name: 'Wellfound', color: '#FF0000' },
-        { Icon: 'https://bookface-static.ycombinator.com/assets/ycdc/favicon-c8a914eeeba9fe6f7a863b35608b55aeedd7c1ff409c97b9ecb96b7a6c278d70.ico', name: 'YCombinator', color: '#000000' },
-        { Icon: 'https://remoteok.com/assets/logo-square.png', name: 'RemoteOK', color: '#000000' },
+      { Icon: '/logos/greenhouse-favicon.png', name: 'Greenhouse', color: '#1877F2' },
+      { Icon: '/logos/favicon-lever.png', name: 'Lever', color: '#0A66C2' },
+      { Icon: '/logos/ashbyhq-favicon.png', name: 'Ashbyhq', color: '#E4405F' },
+      { Icon: '/logos/wellfound-favicon.png', name: 'Wellfound', color: '#FF0000' },
+      { Icon: '/logos/ycombinator-favicon.ico', name: 'YCombinator', color: '#000000' },
+      { Icon: '/logos/remoteok-logo.png', name: 'RemoteOK', color: '#000000' },
     ];
 
 

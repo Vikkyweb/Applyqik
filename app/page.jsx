@@ -1,6 +1,7 @@
 'use client';
 
 
+import FaqSection from './components/Homepage/FaqSection';
 import HeroDiagram from './components/Homepage/Hero';
 import HowItWorks from './components/Homepage/HowItWorks';
 import JobTrackerSection from './components/Homepage/JobTrackerSection';
@@ -26,6 +27,8 @@ export default function Homepage() {
       <Testimonials />
 
       <PricingPage />
+
+      <FaqSection />
       
     </div>
   );

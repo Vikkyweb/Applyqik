@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { GoogleIcon, XeroIcon, IntuitIcon } from "../../components/icons";
+import { GoogleIcon } from "../../components/icons";
 import LeftIllustration from "@/app/components/Illustrations/LeftIllustration";
 import RightIllustration from "@/app/components/Illustrations/RightIllustration";
+import Link from "next/link";
+import { 
+  FaFacebook, 
+  FaLinkedin, 
+} from 'react-icons/fa';
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -18,7 +23,7 @@ export default function SignInPage() {
   }
 
   return (
-    <main className="min-h-screen w-full bg-[#EEF1EF] flex items-center justify-center px-3 py-6 sm:px-6 sm:py-10">
+    <main className="min-h-screen w-full bg-background flex items-center justify-center px-3 py-6 sm:px-6 sm:py-10">
       <div
         className="
           w-full max-w-[420px]
@@ -42,22 +47,22 @@ export default function SignInPage() {
             <div className="w-full max-w-[420px] rounded-xl bg-white p-7 shadow-[0_1px_2px_rgba(31,42,46,0.06),0_8px_24px_-8px_rgba(31,42,46,0.12)] sm:p-9">
               {/* Logo */}
               <div className="mb-7 flex items-center gap-2">
-                <span className="text-[28px] font-extrabold tracking-tight text-[#F45D48]">
-                  gusto
+                <span className="text-[28px] font-extrabold tracking-tight text-primary">
+                  Applyqik
                 </span>
               </div>
 
               <h1 className="text-[22px] font-bold leading-tight text-[#1F2A2E] sm:text-[24px]">
-                Welcome back to Gusto.
+                Welcome back to Applyqik.
               </h1>
               <p className="mt-1.5 text-[14px] text-[#6B7573]">
                 New here?{" "}
-                <a
-                  href="#"
-                  className="font-medium text-[#2E6E71] underline underline-offset-2 hover:text-[#24585B]"
+                <Link
+                  href="/sign-up"
+                  className="font-medium text-accent underline underline-offset-2 hover:text-secondary"
                 >
                   Create an account
-                </a>
+                </Link>
                 .
               </p>
 
@@ -75,7 +80,7 @@ export default function SignInPage() {
                     autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors placeholder:text-[#6B7573]/60 focus:border-[#2E6E71] focus:ring-2 focus:ring-[#2E6E71]/20"
+                    className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors placeholder:text-[#6B7573]/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
@@ -87,12 +92,12 @@ export default function SignInPage() {
                     >
                       Password
                     </label>
-                    <a
-                      href="#"
-                      className="text-[13px] font-medium text-[#2E6E71] underline underline-offset-2 hover:text-[#24585B]"
+                    <Link
+                      href="/forgot-password"
+                      className="text-[13px] font-medium text-accent underline underline-offset-2 hover:text-secondary"
                     >
                       Forgot your password?
-                    </a>
+                    </Link>
                   </div>
                   <input
                     id="password"
@@ -100,7 +105,7 @@ export default function SignInPage() {
                     autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors focus:border-[#2E6E71] focus:ring-2 focus:ring-[#2E6E71]/20"
+                    className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
@@ -109,7 +114,7 @@ export default function SignInPage() {
                     type="checkbox"
                     checked={remember}
                     onChange={(e) => setRemember(e.target.checked)}
-                    className="h-4 w-4 rounded border-[#DCE3E1] text-[#2E6E71] focus:ring-2 focus:ring-[#2E6E71]/30"
+                    className="h-4 w-4 rounded border-[#DCE3E1] text-primary focus:ring-2 focus:ring-primary/30"
                   />
                   <span className="text-[14px] text-[#1F2A2E]">
                     Remember this device
@@ -119,7 +124,7 @@ export default function SignInPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="mt-2 w-full rounded-md bg-[#2E6E71] py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#24585B] disabled:opacity-70"
+                  className="mt-2 w-full rounded-md bg-primary py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-secondary disabled:opacity-70 cursor-pointer"
                 >
                   {submitting ? "Signing in…" : "Sign in"}
                 </button>
@@ -145,15 +150,15 @@ export default function SignInPage() {
                     type="button"
                     className="flex w-1/2 items-center justify-center gap-2 rounded-md border border-[#DCE3E1] bg-white py-2.5 text-[14px] font-medium text-[#1F2A2E] transition-colors hover:bg-[#F5F6F4]"
                   >
-                    <XeroIcon />
-                    Xero
+                    <FaFacebook />
+                    Facebook
                   </button>
                   <button
                     type="button"
                     className="flex w-1/2 items-center justify-center gap-2 rounded-md border border-[#DCE3E1] bg-white py-2.5 text-[14px] font-medium text-[#1F2A2E] transition-colors hover:bg-[#F5F6F4]"
                   >
-                    <IntuitIcon />
-                    Intuit
+                    <FaLinkedin />
+                    LinkedIn
                   </button>
                 </div>
               </div>

@@ -2,9 +2,6 @@
 
 import { useState } from 'react';
 import {
-  Youtube,
-  Linkedin,
-  Instagram,
   ChevronDown,
 } from 'lucide-react';
 import { 
@@ -12,9 +9,6 @@ import {
   FaInstagram, 
   FaLinkedin, 
   FaYoutube, 
-  FaTiktok ,
-  FaBuilding,
-  FaBriefcase,
 } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -36,42 +30,34 @@ import Link from 'next/link';
 
 const columns = [
   {
-    title: 'Tools',
+    title: 'Features',
     links: [
-      'AI Resume Builder',
-      'Job Application Tracker',
-      'ATS Resume Checker',
-      'Resume Summary Generator',
-      'Resume Job Description Match',
-      'Resume Bullet Point Generator',
-      'Free AI Resume Builder',
+      'AI Job Discovery',
+      'AI Matching',
+      'ATS Resume Generator',
+      'Cover Letters',
+      'Tracking & Analytics',
     ],
   },
-  // {
-  //   title: 'Templates & Examples',
-  //   links: [
-  //     'Resume Examples',
-  //     'Best Resume Format',
-  //     'Resume Templates',
-  //     'Cover Letter Examples',
-  //     'Cover Letter Templates',
-  //     'CV Examples',
-  //   ],
-  // },
+
   {
-    title: 'Resources',
-    links: ['Career Hub', 'Resume Synonyms', 'Job Search', 'Browse Jobs', 'Career Paths'],
+    title: 'Sources',
+    links: ['RemoteOk', 'Lever', 'Ashbyhq', 'Wellfound', 'YCombinator'],
   },
   {
-    title: 'Comparisons',
+    title: 'Quick Links',
     links: [
-      'Applyqik vs Jobscan',
-      'Applyqik vs Rezi',
+      'Pricing',
+      'Who-is-it-for',
+      'Security',
+      'Blog',
+      'Contact',
+      'FAQ & Help',
     ],
   },
   {
     title: 'Company',
-    links: ['Sign Up', 'Log In', 'Applyqik+ Pricing', 'About Us', 'Open Positions', 'Affiliate Program'],
+    links: ['Sign Up', 'Sign In','About Us','Testimonials', 'Privacy Policy', 'Terms of Service'],
   },
 ];
 
@@ -107,7 +93,7 @@ function FooterColumn({ title, links }) {
           <li key={link}>
             <Link
               href={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
-              className="text-[15px] leading-snug text-foreground/90 transition-colors hover:text-white hover:underline underline-offset-2"
+              className="text-[15px] leading-snug text-foreground/90 transition-colors hover:text-foreground/80 hover:underline underline-offset-2"
             >
               {link}
             </Link>
@@ -134,7 +120,7 @@ export default function Footer() {
           {/* Brand / trust row */}
           <div className="mt-10 flex flex-col items-start gap-6 border-t border-white/10 pt-8 sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:pt-10">
             <div className="flex items-start gap-3 sm:items-center">
-              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md border-2 border-white text-white">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border-2 border-border text-white">
                 <span className="text-lg font-bold leading-none">t</span>
               </div>
               <div>
@@ -186,7 +172,7 @@ export default function Footer() {
               <FaLinkedin className="h-5 w-5" />
             </Link>
             <Link href="#" aria-label="TikTok" className="hover:opacity-70">
-              <FaTiktok className="h-5 w-5" />
+              <FaFacebook className="h-5 w-5" />
             </Link>
             <Link href="#" aria-label="Instagram" className="hover:opacity-70">
               <FaInstagram className="h-5 w-5" />
