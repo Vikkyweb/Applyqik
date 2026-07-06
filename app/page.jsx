@@ -6,7 +6,7 @@ import HeroDiagram from './components/Homepage/Hero';
 import HowItWorks from './components/Homepage/HowItWorks';
 import JobTrackerSection from './components/Homepage/JobTrackerSection';
 import ProblemSolutionSection from './components/Homepage/ProblemSolution';
-import StackedFeaturess from './components/Homepage/StackedFeaturess';
+import StackedFeatures from './components/Homepage/StackedFeatures';
 import Testimonials from './components/Homepage/Testimonials';
 import TrustSection from './components/Homepage/TrustSection';
 import PricingPage from './pricing/page';
@@ -21,7 +21,7 @@ export default function Homepage() {
 
       <HowItWorks />  
 
-      <StackedFeaturess />
+      <StackedFeatures />
 
       <TrustSection />
       <Testimonials />

@@ -4,18 +4,18 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import {
-  Link2,
-  Palette,
-  Zap,
-  Smartphone,
-  Rocket,
+  Search,
+  Target,
+  FileCheck2,
+  Mail,
+  KanbanSquare,
   CheckCircle2,
   ImageOff,
 } from 'lucide-react';
 
 /**
  * StackedFeatures
- * "How it works" section — up to 5 static rows that stack on scroll.
+ * "How Applyqik works" section — up to 5 static rows that stack on scroll.
  *
  * How the stack works:
  * - Each row is wrapped in a tall spacer (`STEP_HEIGHT`) so there's scroll
@@ -28,7 +28,7 @@ import {
  *   dip as the NEXT card slides over it, reinforcing depth.
  *
  * Screenshots: set `screenshot` per step to a real path under /public
- * (e.g. '/screenshots/step-01-import.png'). Until that file exists, the
+ * (e.g. '/screenshots/step-01-discovery.png'). Until that file exists, the
  * frame renders a labeled placeholder so it's obvious what's missing —
  * nothing breaks if the image 404s.
  *
@@ -39,78 +39,78 @@ import {
 const STEPS = [
   {
     id: '01',
-    label: 'Import',
-    title: 'Drop in your URL',
+    label: 'Discovery',
+    title: 'Find opportunities without endless searching',
     description:
-      'Point Woxelo at your live site and we pull in your pages, navigation, and content automatically — nothing to rebuild from scratch, and nothing to migrate by hand.',
+      'Applyqik continuously searches trusted job sources and brings relevant opportunities directly to you — matched to your skills, experience, location, and career goals.',
     bullets: [
-      'Pages, navigation, and content pulled in automatically',
-      'Works with any site — no rebuild required',
-      'SSL and custom domains carried over',
+      'Matched to your skills',
+      'Matched to your experience',
+      'Matched to your location and career goals',
     ],
-    icon: Link2,
+    icon: Search,
     accent: '#6C5CE7', // indigo
-    screenshot: '/screenshots/step-01-import.png',
+    screenshot: '/screenshots/step-01-discovery.png',
   },
   {
     id: '02',
-    label: 'Design',
-    title: 'Make it feel native',
+    label: 'Matching',
+    title: 'Know why a job fits you',
     description:
-      'Set your icon, splash screen, and color theme once. Your existing web layout gets remapped to native tab bars, drawers, and transitions automatically.',
+      'Not every job deserves your time. Applyqik analyzes each opportunity against your profile and explains why you match, where you\u2019re strong, and what\u2019s missing.',
     bullets: [
-      'Icon, splash screen, and theme in one place',
-      'Web layout remapped to native navigation patterns',
-      'Light and dark variants generated automatically',
+      'Clear breakdown of why you match',
+      'Your strengths for the role',
+      'Missing requirements flagged upfront',
     ],
-    icon: Palette,
+    icon: Target,
     accent: '#39C6A8', // mint
-    screenshot: '/screenshots/step-02-design.png',
+    screenshot: '/screenshots/step-02-matching.png',
   },
   {
     id: '03',
-    label: 'Extend',
-    title: 'Add native features',
+    label: 'Resume',
+    title: 'Stop sending resumes that get ignored',
     description:
-      'Go beyond what a browser can do. Turn on device capabilities your users expect from a real app, without writing a line of native code.',
+      'Every job is different. Applyqik helps create ATS-friendly resume versions tailored for specific opportunities, so nothing gets filtered out before a human sees it.',
     bullets: [
-      'Push notifications with one toggle',
-      'Offline caching for core pages',
-      'Camera, biometrics, and device APIs on request',
+      'Tailored to each job posting',
+      'Optimized for applicant tracking systems',
+      'Keyword gaps identified automatically',
     ],
-    icon: Zap,
+    icon: FileCheck2,
     accent: '#E8A33D', // amber
-    screenshot: '/screenshots/step-03-extend.png',
+    screenshot: '/screenshots/step-03-resume.png',
   },
   {
     id: '04',
-    label: 'Preview',
-    title: 'Test on a real device',
+    label: 'Cover Letters',
+    title: 'Personalized applications, not generic templates',
     description:
-      'Scan a QR code to open a live build on your own phone. Every change you save hot-reloads instantly, so you catch issues before you ship them.',
+      'Generate cover letters built around your experience, the company, and the specific role you\u2019re applying to — no more one-size-fits-all templates.',
     bullets: [
-      'Scan a QR code to open on your own phone',
-      'Every save hot-reloads instantly',
-      'Share a preview link with your team',
+      'Based on your experience',
+      'Based on the company',
+      'Based on the role',
     ],
-    icon: Smartphone,
+    icon: Mail,
     accent: '#E85D75', // coral
-    screenshot: '/screenshots/step-04-preview.png',
+    screenshot: '/screenshots/step-04-cover-letters.png',
   },
   {
     id: '05',
-    label: 'Publish',
-    title: 'Ship to both stores',
+    label: 'Tracking',
+    title: 'Keep your entire search organized',
     description:
-      'Submit to the Apple App Store and Google Play together from one dashboard, or skip the review queues entirely with a Woxelo-hosted link.',
+      'Never lose track of where you applied. Manage every stage in one place, from saved to offer, without juggling spreadsheets or email threads.',
     bullets: [
-      'Submit to App Store and Google Play together',
-      'Or go live instantly on a Woxelo-hosted link',
-      'Version history if you need to roll back',
+      'Saved, Preparing, Applied, Interview, Offer',
+      'One place for your entire pipeline',
+      'Nothing falls through the cracks',
     ],
-    icon: Rocket,
+    icon: KanbanSquare,
     accent: '#4FA3E3', // sky
-    screenshot: '/screenshots/step-05-publish.png',
+    screenshot: '/screenshots/step-05-tracking.png',
   },
 ];
 
@@ -125,11 +125,11 @@ export default function StackedFeatures() {
           How it works
         </span>
         <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-black leading-[1.1]">
-          From website to app store,
+          From job search to offer,
           <br className="hidden sm:block" /> in five steps
         </h2>
         <p className="mt-5 text-base sm:text-lg text-[#8B90A0] leading-relaxed">
-          Each stage builds on the last. Scroll to see the whole pipeline stack up.
+          One pipeline, five stages. Scroll to see the whole process stack up.
         </p>
       </div>
 
@@ -184,7 +184,7 @@ function StackRow({ step, index, total }) {
             >
               <ScreenshotFrame
                 src={step.screenshot}
-                alt={`${step.title} — Woxelo screenshot`}
+                alt={`${step.title} — Applyqik screenshot`}
                 accent={step.accent}
                 label={step.label}
               />

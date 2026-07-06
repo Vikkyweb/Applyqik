@@ -44,3 +44,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     //     { Icon: 'https://bookface-static.ycombinator.com/assets/ycdc/favicon-c8a914eeeba9fe6f7a863b35608b55aeedd7c1ff409c97b9ecb96b7a6c278d70.ico', name: 'YCombinator', color: '#000000' },
     //     { Icon: 'https://remoteok.com/assets/logo-square.png', name: 'RemoteOK', color: '#000000' },
     // ];
+
+    "We help people get to better opportunities faster with less work."
+    "JobPilot helps professionals spend less time searching and more time applying to jobs they're actually qualified for."
