@@ -208,12 +208,12 @@ export default function Header() {
 
           {/* CTA and Mobile Menu */}
           <div className="flex items-center gap-4">
-            <Link href="/signup" className="hidden md:flex items-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
+            <Link href="/sign-up" className="hidden md:flex items-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
               <LuArrowBigRight size={16} />
               SignUp for free
             </Link>
 
-            <Link href="/signin" className="hidden md:flex items-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
+            <Link href="/sign-in" className="hidden md:flex items-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
               <UserRound size={16} />
               SignIn
             </Link>
@@ -323,12 +323,12 @@ export default function Header() {
 
           {/* Mobile CTA */}
           <div className="p-6 border-t border-border">
-            <Link href="/signin" className="w-full flex items-center justify-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300 mb-4">
+            <Link href="/sign-in" className="w-full flex items-center justify-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300 mb-4">
               <UserRound size={18} />
               SignIn
             </Link>
 
-            <Link href="/signup" className="w-full flex items-center justify-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
+            <Link href="/sign-up" className="w-full flex items-center justify-center gap-2 px-5 py-2 border border-border rounded-xl text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300">
               <ArrowBigRightDash size={18} />
               SignUp for free
             </Link>
