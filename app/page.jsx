@@ -26,7 +26,7 @@ export default function Homepage() {
       <TrustSection />
       <Testimonials />
 
-      <PricingPage />
+      {/* <PricingPage /> */}
 
       <FaqSection />
       

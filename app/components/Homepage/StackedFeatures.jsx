@@ -50,7 +50,7 @@ const STEPS = [
     ],
     icon: Search,
     accent: '#6C5CE7', // indigo
-    screenshot: '/screenshots/step-01-discovery.png',
+    screenshot: '/screenshots/one.png',
   },
   {
     id: '02',
@@ -65,7 +65,7 @@ const STEPS = [
     ],
     icon: Target,
     accent: '#39C6A8', // mint
-    screenshot: '/screenshots/step-02-matching.png',
+    screenshot: '/screenshots/two.png',
   },
   {
     id: '03',
@@ -80,7 +80,7 @@ const STEPS = [
     ],
     icon: FileCheck2,
     accent: '#E8A33D', // amber
-    screenshot: '/screenshots/step-03-resume.png',
+    screenshot: '/screenshots/three.png',
   },
   {
     id: '04',
@@ -95,7 +95,7 @@ const STEPS = [
     ],
     icon: Mail,
     accent: '#E85D75', // coral
-    screenshot: '/screenshots/step-04-cover-letters.png',
+    screenshot: '/screenshots/one.png',
   },
   {
     id: '05',
@@ -110,7 +110,7 @@ const STEPS = [
     ],
     icon: KanbanSquare,
     accent: '#4FA3E3', // sky
-    screenshot: '/screenshots/step-05-tracking.png',
+    screenshot: '/screenshots/three.png',
   },
 ];
 
