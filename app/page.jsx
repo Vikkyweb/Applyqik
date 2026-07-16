@@ -9,7 +9,7 @@ import ProblemSolutionSection from '../components/Homepage/ProblemSolution';
 import StackedFeatures from '../components/Homepage/StackedFeatures';
 import Testimonials from '../components/Homepage/Testimonials';
 import TrustSection from '../components/Homepage/TrustSection';
-import PricingPage from './pricing/page';
+import PricingPage from './(homepage)/pricing/page';
 
 export default function Homepage() {
 
