@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Search, Bell, Sparkles, Target, FileCheck2, CalendarClock, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { matches as matchesApi, jobs as jobsApi, applications as appsApi, resume as resumeApi } from '@/lib/api';
+import { matches as matchesApi, jobs as jobsApi, applications as appsApi, resume as resumeApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
 import HeroPanel from '@/components/dashboard/HeroPanel';
 import StatCard from '@/components/dashboard/StatCard';

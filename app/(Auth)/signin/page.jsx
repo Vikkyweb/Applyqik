@@ -1,25 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { GoogleIcon } from "../../../components/icons";
 import LeftIllustration from "@/components/Illustrations/LeftIllustration";
 import RightIllustration from "@/components/Illustrations/RightIllustration";
-import Link from "next/link";
-import { 
-  FaFacebook, 
-  FaLinkedin, 
-} from 'react-icons/fa';
+import { useAuth } from "@/context/AuthContext";
+import Button from "@/components/ui/Button";
 
 export default function SignInPage() {
+  const router = useRouter();
+  const { login } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(e) {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitting(true);
-    window.setTimeout(() => setSubmitting(false), 900);
+    setError("");
+    setLoading(true);
+    try {
+      await login(email, password);
+      router.push("/overview");
+    } catch (err) {
+      setError(err.message || "Login failed.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -58,7 +71,7 @@ export default function SignInPage() {
               <p className="mt-1.5 text-[14px] text-[#6B7573]">
                 New here?{" "}
                 <Link
-                  href="/sign-up"
+                  href="/signup"
                   className="font-medium text-accent underline underline-offset-2 hover:text-secondary"
                 >
                   Create an account
@@ -80,6 +93,7 @@ export default function SignInPage() {
                     autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                     className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors placeholder:text-[#6B7573]/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
@@ -105,6 +119,7 @@ export default function SignInPage() {
                     autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                     className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
@@ -116,18 +131,21 @@ export default function SignInPage() {
                     onChange={(e) => setRemember(e.target.checked)}
                     className="h-4 w-4 rounded border-[#DCE3E1] text-primary focus:ring-2 focus:ring-primary/30"
                   />
-                  <span className="text-[14px] text-[#1F2A2E]">
-                    Remember this device
-                  </span>
+                  <span className="text-[14px] text-[#1F2A2E]">Remember this device</span>
                 </label>
 
-                <button
+                {error && (
+                  <p className="rounded-lg bg-red-500/8 px-3 py-2 text-sm text-red-600">{error}</p>
+                )}
+
+                <Button
                   type="submit"
-                  disabled={submitting}
-                  className="mt-2 w-full rounded-md bg-primary py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-secondary disabled:opacity-70 cursor-pointer"
+                  variant="accent"
+                  loading={loading}
+                  className="w-full rounded-md bg-primary py-2.5 text-center text-[15px] font-semibold text-white transition-colors hover:bg-secondary disabled:opacity-70 cursor-pointer"
                 >
-                  {submitting ? "Signing in…" : "Sign in"}
-                </button>
+                  Sign In
+                </Button>
               </form>
 
               <div className="my-6 flex items-center gap-3">

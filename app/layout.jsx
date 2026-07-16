@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "../components/Homepage/Header";
 import Footer from "../components/Homepage/Footer";
 import ThemeProvider from "../libs/Providers";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,15 +28,18 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body className="min-h-dvh flex flex-col">
-        <ThemeProvider>
-          <main>
-            <Header />
+        <AuthProvider>
+          <ThemeProvider>
+            <main>
+              <Header />
 
-            {children}
-            
-            <Footer />
-          </main>
-        </ThemeProvider>
+              {children}
+              
+              <Footer />
+            </main>
+          </ThemeProvider>
+
+        </AuthProvider>
       </body>
     </html>
   );

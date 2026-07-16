@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }) {
 
   // Route guard: bounce unauthenticated users to onboarding.
   useEffect(() => {
-    if (!loading && !isAuthenticated) router.replace('/sign-in');
+    if (!loading && !isAuthenticated) router.replace('/signin');
   }, [isAuthenticated, loading, router]);
 
   if (loading) {

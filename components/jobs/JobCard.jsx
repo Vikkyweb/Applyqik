@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { MapPin, Building2, Bookmark, ExternalLink, Check } from 'lucide-react';
 import ScoreBadge from '@/components/ui/ScoreBadge';
-import { savedJobs as savedApi, applications as appsApi } from '@/lib/api';
+import { savedJobs as savedApi, applications as appsApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
 
 // One card, reused for plain listings and scored matches.

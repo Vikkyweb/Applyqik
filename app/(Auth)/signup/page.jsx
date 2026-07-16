@@ -1,29 +1,54 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { GoogleIcon } from "../../../components/icons";
 import LeftIllustration from "@/components/Illustrations/LeftIllustration";
 import RightIllustration from "@/components/Illustrations/RightIllustration";
-import Link from "next/link";
-import { 
-  FaFacebook, 
-  FaLinkedin, 
-} from 'react-icons/fa';
+import { useAuth } from "@/context/AuthContext";
+import Button from "@/components/ui/Button";
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const { register } = useAuth();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(e) {
+  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitting(true);
-    window.setTimeout(() => setSubmitting(false), 900);
+    setError("");
+    setFieldErrors({});
+    setLoading(true);
+    try {
+      // Backend expects a single `name` — combine the two inputs.
+      const name = `${firstName} ${lastName}`.trim();
+      
+      await register(name, email, password);
+      // New accounts go into onboarding to build their career agent.
+      router.push("/onboarding");
+    } catch (err) {
+      if (err.errors) setFieldErrors(err.errors);
+      else setError(err.message || "Registration failed.");
+    } finally {
+      setLoading(false);
+    }
   }
+
+  // Helper: pull the first message for a field out of the API error bag.
+  const fieldError = (key) => {
+    const v = fieldErrors[key];
+    return Array.isArray(v) ? v[0] : v;
+  };
 
   return (
     <main className="min-h-screen w-full bg-background flex items-center justify-center px-3 py-6 sm:px-6 sm:py-10">
@@ -45,7 +70,7 @@ export default function SignUpPage() {
             <LeftIllustration />
           </div>
 
-          {/* Sign-in card, always centered and the primary element */}
+          {/* Sign-up card, always centered and the primary element */}
           <div className="flex w-full justify-center lg:w-auto lg:shrink-0">
             <div className="w-full max-w-[420px] rounded-xl bg-white p-7 shadow-[0_1px_2px_rgba(31,42,46,0.06),0_8px_24px_-8px_rgba(31,42,46,0.12)] sm:p-9">
               {/* Logo */}
@@ -56,12 +81,12 @@ export default function SignUpPage() {
               </div>
 
               <h1 className="text-[22px] font-bold leading-tight text-[#1F2A2E] sm:text-[24px]">
-                Welcome back to Applyqik.
+                Create your Applyqik account.
               </h1>
               <p className="mt-1.5 text-[14px] text-[#6B7573]">
                 Already have an account?{" "}
                 <Link
-                  href="/sign-in"
+                  href="/signin"
                   className="font-medium text-accent underline underline-offset-2 hover:text-secondary"
                 >
                   Sign in
@@ -75,33 +100,37 @@ export default function SignUpPage() {
                     htmlFor="firstName"
                     className="mb-1.5 block text-[13px] font-medium text-[#1F2A2E]"
                   >
-                    First Name
+                    First name
                   </label>
                   <input
                     id="firstName"
-                    type="firstName"
-                    autoComplete="firstName"
+                    type="text"
+                    autoComplete="given-name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    required
                     className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors placeholder:text-[#6B7573]/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
+
                 <div>
                   <label
                     htmlFor="lastName"
                     className="mb-1.5 block text-[13px] font-medium text-[#1F2A2E]"
                   >
-                    Last Name
+                    Last name
                   </label>
                   <input
                     id="lastName"
-                    type="lastName"
-                    autoComplete="lastName"
+                    type="text"
+                    autoComplete="family-name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    required
                     className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors placeholder:text-[#6B7573]/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
+
                 <div>
                   <label
                     htmlFor="email"
@@ -115,8 +144,12 @@ export default function SignUpPage() {
                     autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                     className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors placeholder:text-[#6B7573]/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
+                  {fieldError("email") && (
+                    <p className="mt-1 text-[12px] text-red-600">{fieldError("email")}</p>
+                  )}
                 </div>
 
                 <div>
@@ -131,11 +164,16 @@ export default function SignUpPage() {
                   <input
                     id="password"
                     type="password"
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={8}
                     className="w-full rounded-md border border-[#DCE3E1] bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A2E] outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
+                  {fieldError("password") && (
+                    <p className="mt-1 text-[12px] text-red-600">{fieldError("password")}</p>
+                  )}
                 </div>
 
                 <label className="flex cursor-pointer items-center gap-2.5 pt-1 select-none">
@@ -145,18 +183,21 @@ export default function SignUpPage() {
                     onChange={(e) => setRemember(e.target.checked)}
                     className="h-4 w-4 rounded border-[#DCE3E1] text-primary focus:ring-2 focus:ring-primary/30"
                   />
-                  <span className="text-[14px] text-[#1F2A2E]">
-                    Remember this device
-                  </span>
+                  <span className="text-[14px] text-[#1F2A2E]">Remember this device</span>
                 </label>
 
-                <button
+                {error && (
+                  <p className="rounded-lg bg-red-500/8 px-3 py-2 text-sm text-red-600">{error}</p>
+                )}
+
+                <Button
                   type="submit"
-                  disabled={submitting}
-                  className="mt-2 w-full rounded-md bg-primary py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-secondary disabled:opacity-70 cursor-pointer"
+                  variant="accent"
+                  loading={loading}
+                  className="w-full text-center rounded-md bg-primary py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-secondary disabled:opacity-70 cursor-pointer"
                 >
-                  {submitting ? "Signing up…" : "Sign up"}
-                </button>
+                  Create account
+                </Button>
               </form>
 
               <div className="my-6 flex items-center gap-3">
