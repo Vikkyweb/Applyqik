@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { GoogleIcon } from "../../components/icons";
-import LeftIllustration from "@/app/components/Illustrations/LeftIllustration";
-import RightIllustration from "@/app/components/Illustrations/RightIllustration";
+import { GoogleIcon } from "../../../components/icons";
+import LeftIllustration from "@/components/Illustrations/LeftIllustration";
+import RightIllustration from "@/components/Illustrations/RightIllustration";
 import Link from "next/link";
 import { 
   FaFacebook, 
