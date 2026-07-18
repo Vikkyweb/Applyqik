@@ -9,12 +9,17 @@ import MobileNav from '@/components/layout/MobileNav';
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, onboardingComplete } = useAuth();
 
   // Route guard: bounce unauthenticated users to onboarding.
   useEffect(() => {
     if (!loading && !isAuthenticated) router.replace('/signin');
   }, [isAuthenticated, loading, router]);
+
+  if (!onboardingComplete) {
+      router.replace('/onboarding');
+      return;
+  }
 
   if (loading) {
     return (
