@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { User, Upload, FileText, Check, Loader2, AlertCircle, X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { profile as profileApi, resume as resumeApi } from '@/lib/api';
+import { profile as profileApi, resume as resumeApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
 import Skeleton from '@/components/ui/Skeleton';

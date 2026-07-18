@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Sparkles, RefreshCw, SlidersHorizontal } from 'lucide-react';
-import { matches as matchesApi, jobs as jobsApi } from '@/lib/api';
+import { matches as matchesApi, jobs as jobsApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
 import JobCard from '@/components/jobs/JobCard';
 import JobCardSkeleton from '@/components/jobs/JobCardSkeleton';

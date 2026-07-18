@@ -288,12 +288,12 @@ export default function HeroDiagram() {
           </div>
         </div>
 
-        <div className="text-center mb-3 max-w-2xl mx-auto">
+        {/* <div className="text-center mb-3 max-w-2xl mx-auto">
           <div className="inline-flex items-center justify-center gap-3 bg-linear-to-r from-green-50 to-indigo-50 px-4 py-2 rounded-full text-xs font-semibold text-gray-700 border border-green-200">
             <span className="text-gray-600">Hunting across 5+ relevant job sources</span>
             <span className="text-green-600">→</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Headline */}
         <div className="lg:max-w-[50%] m-auto text-center mb-8 ">
@@ -347,7 +347,7 @@ export default function HeroDiagram() {
 
         {/* Subheading */}
         <div className="text-center mb-3 max-w-2xl mx-auto">
-          <p className="mt-4 text-lg text-gray-600 max-w-xl">
+          <p className="mt-4 text-lg text-gray-800 dark:text-gray-400 max-w-xl">
             Finds the right jobs, matches your skills, and prepares your applications — automatically.
           </p>
         </div>
@@ -450,24 +450,24 @@ export default function HeroDiagram() {
               <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
                 <Globe size={24} className="text-blue-600" />
               </div>
-              <h4 className="font-semibold text-slate-900 mb-2">Aggregate Sources</h4>
-              <p className="text-sm text-slate-600">Pulls from all major job boards in real-time</p>
+              <h4 className="font-semibold text-gray-600 dark:text-gray-400 mb-2">Aggregate Sources</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Pulls from all major job boards in real-time</p>
             </div>
 
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-indigo-100 rounded-full mb-4">
                 <Zap size={24} className="text-indigo-600" />
               </div>
-              <h4 className="font-semibold text-slate-900 mb-2">AI Matching</h4>
-              <p className="text-sm text-slate-600">Analyzes your profile against 50K+ opportunities</p>
+              <h4 className="font-semibold text-gray-900 dark:text-gray-400 mb-2">AI Matching</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Analyzes your profile against 50K+ opportunities</p>
             </div>
 
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-teal-100 rounded-full mb-4">
                 <Check size={24} className="text-teal-600" />
               </div>
-              <h4 className="font-semibold text-slate-900 mb-2">Smart Categorize</h4>
-              <p className="text-sm text-slate-600">Organizes into roles and industries you care about</p>
+              <h4 className="font-semibold text-gray-900 dark:text-gray-400 mb-2">Smart Categorize</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Organizes into roles and industries you care about</p>
             </div>
           </div>
         </div>

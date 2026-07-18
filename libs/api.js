@@ -79,6 +79,7 @@ function safeParse(text) {
   }
 }
 
+
 // ─── Auth ────────────────────────────────────────────────────────────
 export const auth = {
   register: (payload) => apiFetch('/auth/register', { method: 'POST', body: payload, auth: false }),
@@ -87,10 +88,17 @@ export const auth = {
   me: () => apiFetch('/auth/user'),
 };
 
-// ─── Profile ─────────────────────────────────────────────────────────
+// ─── Profile (also the onboarding-progress write path) ───────────────
 export const profile = {
   get: () => apiFetch('/profile'),
   update: (payload) => apiFetch('/profile', { method: 'PUT', body: payload }),
+ 
+  // Onboarding convenience wrappers — thin, self-documenting calls the
+  // onboarding page uses so its intent reads clearly.
+  saveOnboardingStep: (step, extra = {}) =>
+    apiFetch('/profile', { method: 'PUT', body: { onboarding_step: step, ...extra } }),
+  completeOnboarding: (extra = {}) =>
+    apiFetch('/profile', { method: 'PUT', body: { onboarding_complete: true, ...extra } }),
 };
 
 // ─── Job Preferences ─────────────────────────────────────────────────

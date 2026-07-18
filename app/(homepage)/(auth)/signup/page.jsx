@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaFacebook, FaLinkedin } from "react-icons/fa";
-import { GoogleIcon } from "../../../components/icons";
+import { GoogleIcon } from "../../../../components/icons";
 import LeftIllustration from "@/components/Illustrations/LeftIllustration";
 import RightIllustration from "@/components/Illustrations/RightIllustration";
 import { useAuth } from "@/context/AuthContext";

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { FileText, Building2, ExternalLink } from 'lucide-react';
-import { applications as appsApi } from '@/lib/api';
+import { applications as appsApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
 import Skeleton from '@/components/ui/Skeleton';
 import EmptyState from '@/components/ui/EmptyState';

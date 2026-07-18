@@ -1,7 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "../components/Homepage/Header";
-import Footer from "../components/Homepage/Footer";
 import ThemeProvider from "../libs/Providers";
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -30,15 +28,8 @@ export default function RootLayout({ children }) {
       <body className="min-h-dvh flex flex-col">
         <AuthProvider>
           <ThemeProvider>
-            <main>
-              <Header />
-
-              {children}
-              
-              <Footer />
-            </main>
+            {children}
           </ThemeProvider>
-
         </AuthProvider>
       </body>
     </html>

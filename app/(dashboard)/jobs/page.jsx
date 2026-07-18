@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Briefcase, Search, RefreshCw } from 'lucide-react';
-import { jobs as jobsApi } from '@/lib/api';
+import { jobs as jobsApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
 import JobCard from '@/components/jobs/JobCard';
 import JobCardSkeleton from '@/components/jobs/JobCardSkeleton';

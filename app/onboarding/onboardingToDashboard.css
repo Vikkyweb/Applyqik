@@ -1,28 +1,3 @@
-@import "tailwindcss";
-
-@layer base {
-  :root {
-    --font-inter: 'Inter', system-ui, sans-serif;
-    --font-instrument: 'Instrument Sans', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-    /* Reference dashboard tokens (kept so the eco-style components render identically) */
-    --eco-green: #0FB981;
-    --eco-green-dark: #0A7D57;
-    --eco-blue: #5B8DEF;
-    --eco-orange: #E8894A;
-    --eco-standby: #6B7280;
-    --eco-navy: #16181D;
-    --eco-sage-light: #EAF3EC;
-    --background: #C9CDC9;
-  }
-  html {
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-
-
-}
-
 /* Skeleton shimmer */
 .shimmer {
   position: relative;

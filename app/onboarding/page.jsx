@@ -1,15 +1,29 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { Search, ArrowRight, Sparkles, Upload, Check, Loader2, MapPin, Globe, Briefcase } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { jobs as jobsApi, preferences as prefsApi, profile as profileApi, resume as resumeApi } from '@/libs/api';
-import Button from '@/components/ui/Button';
-import "./onboardingToDashboard.css";
+// app/onboarding/page.jsx
+//
+// Resumable, server-backed onboarding.
+//
+// GUARANTEES
+//   1. Not authenticated            -> bounced to /signin
+//   2. Already completed onboarding -> bounced to /overview (can't re-enter)
+//   3. Authenticated + incomplete   -> resumes from profile.onboarding.step
+//   4. Every step advance is PUT to the server immediately, so a closed tab,
+//      a new browser, or a new device all resume from the exact same point.
+//
+// The user registers on the signup page and lands here already authenticated,
+// so this page NEVER creates an account. Its job is purely: collect role ->
+// run the real job sync -> refine -> mark complete -> go to dashboard.
 
-// Progressive onboarding: earn trust before asking for it.
-// role -> searching -> results -> (offer resume) -> refine -> account -> done
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { Search, ArrowRight, Sparkles, Check, Loader2, MapPin, Globe } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { jobs as jobsApi, preferences as prefsApi, profile as profileApi } from '@/libs/api';
+import Button from '@/components/ui/Button';
+
+const STEP_ORDER = ['role', 'searching', 'results', 'refine', 'done'];
+
 const ROLE_SUGGESTIONS = [
   'Backend Engineer', 'Laravel Developer', 'Frontend Developer',
   'Full Stack Developer', 'Product Designer', 'Data Analyst',
@@ -18,16 +32,65 @@ const ROLE_SUGGESTIONS = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { user, isAuthenticated, register, refreshProfile } = useAuth();
-  const [step, setStep] = useState('role');
+  const {
+    loading,
+    isAuthenticated,
+    onboardingComplete,
+    onboardingStep,
+    onboardingRole,
+    saveOnboardingStep,
+    refreshProfile,
+  } = useAuth();
 
-  // If already logged in, skip straight to the dashboard.
-  // useEffect(() => {
-  //   if (isAuthenticated) router.replace('/dashboard');
-  // }, [isAuthenticated, router]);
-
+  // 'checking' until the guard has decided; prevents any flED flash of the flow.
+  const [step, setStep] = useState('checking');
   const [role, setRole] = useState('');
   const [jobCount, setJobCount] = useState(null);
+
+  // ── Guard + resume ──────────────────────────────────────────────────
+  useEffect(() => {
+    if (loading) return; // wait for session hydration
+
+    if (!isAuthenticated) {
+      router.replace('/signin');
+      return;
+    }
+    if (onboardingComplete) {
+      router.replace('/overview');
+      return;
+    }
+
+    // Resume from the server's saved step. 'searching' is transient (it just
+    // kicks a sync); if they died mid-search, resume them at 'role' so they
+    // re-trigger it cleanly rather than staring at a spinner that never ends.
+    const resumeStep = onboardingStep === 'searching' ? 'role' : onboardingStep;
+    setRole(onboardingRole ?? '');
+    setStep(STEP_ORDER.includes(resumeStep) ? resumeStep : 'role');
+  }, [loading, isAuthenticated, onboardingComplete, onboardingStep, onboardingRole, router]);
+
+  // Advance helper: update local step AND persist to the server. Persisting is
+  // fire-and-forget for UX smoothness, but we await where correctness matters.
+  const goTo = useCallback(
+    async (next, extra = {}) => {
+      setStep(next);
+      try {
+        await saveOnboardingStep({ onboarding_step: next, ...extra });
+      } catch {
+        // If the save fails, the user can still proceed; next successful save
+        // will re-sync progress. We never block the flow on a progress write.
+      }
+    },
+    [saveOnboardingStep]
+  );
+
+  // While the guard is deciding, render nothing but a calm loader.
+  if (loading || step === 'checking') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-canvas">
+        <Loader2 className="h-6 w-6 animate-spin text-accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col px-5 py-10">
@@ -38,28 +101,67 @@ export default function OnboardingPage() {
           <RoleStep
             role={role}
             setRole={setRole}
-            onContinue={() => setStep('searching')}
+            onContinue={() => goTo('searching', { onboarding_role: role.trim() })}
           />
         )}
+
         {step === 'searching' && (
-          <SearchingStep role={role} onDone={(count) => { setJobCount(count); setStep('results'); }} />
+          <SearchingStep
+            role={role}
+            onDone={(count) => {
+              setJobCount(count);
+              goTo('results');
+            }}
+          />
         )}
+
         {step === 'results' && (
-          <ResultsStep role={role} count={jobCount} onContinue={() => setStep('account')} />
+          <ResultsStep
+            role={role}
+            count={jobCount}
+            onContinue={() => goTo('refine')}
+          />
         )}
-        {step === 'account' && (
-          <AccountStep role={role} register={register} refreshProfile={refreshProfile} onDone={() => router.push('/dashboard')} />
+
+        {step === 'refine' && (
+          <RefineStep
+            role={role}
+            onFinish={async ({ work_preference, country }) => {
+              // Seed a preference from the role + refinement answers so the
+              // dashboard has something to match against and isn't empty.
+              await prefsApi
+                .create({
+                  desired_title: role,
+                  work_preference: work_preference || 'any',
+                  preferred_country: country || null,
+                  priority: 1,
+                })
+                .catch(() => null);
+
+              // Mark complete on the server (server stamps the timestamp) and
+              // persist the refinement onto the profile in the same call.
+              await profileApi
+                .completeOnboarding({
+                  preferred_roles: [role],
+                  work_preference: work_preference || 'any',
+                  country: country || null,
+                })
+                .catch(() => null);
+
+              await refreshProfile();
+              router.replace('/overview');
+            }}
+          />
         )}
       </div>
     </div>
   );
 }
 
-// ─── Progress header — "Build your career agent" ─────────────────────
+// ─── Progress header ─────────────────────────────────────────────────
 function StepHeader({ step }) {
-  const order = ['role', 'searching', 'results', 'account'];
-  const labels = { role: 'Target role', searching: 'Searching', results: 'Your matches', account: 'Save progress' };
-  const activeIndex = order.indexOf(step);
+  const visible = ['role', 'searching', 'results', 'refine'];
+  const activeIndex = visible.indexOf(step === 'done' ? 'refine' : step);
 
   return (
     <div className="mb-8">
@@ -70,7 +172,7 @@ function StepHeader({ step }) {
         <span className="font-display text-sm font-semibold text-ink">Build your career agent</span>
       </div>
       <div className="flex gap-1.5">
-        {order.map((s, i) => (
+        {visible.map((s, i) => (
           <div
             key={s}
             className={`h-1 flex-1 rounded-full transition-colors duration-500 ${
@@ -93,7 +195,9 @@ function RoleStep({ role, setRole, onContinue }) {
   }, []);
 
   const filtered = role
-    ? ROLE_SUGGESTIONS.filter((s) => s.toLowerCase().includes(role.toLowerCase()) && s.toLowerCase() !== role.toLowerCase())
+    ? ROLE_SUGGESTIONS.filter(
+        (s) => s.toLowerCase().includes(role.toLowerCase()) && s.toLowerCase() !== role.toLowerCase()
+      )
     : ROLE_SUGGESTIONS.slice(0, 5);
 
   return (
@@ -137,12 +241,7 @@ function RoleStep({ role, setRole, onContinue }) {
         )}
       </div>
 
-      <Button
-        variant="accent"
-        onClick={onContinue}
-        disabled={!role.trim()}
-        className="mt-5 w-full"
-      >
+      <Button variant="accent" onClick={onContinue} disabled={!role.trim()} className="mt-5 w-full">
         Continue
         <ArrowRight className="h-4 w-4" />
       </Button>
@@ -150,7 +249,7 @@ function RoleStep({ role, setRole, onContinue }) {
   );
 }
 
-// ─── Screen 2: searching theater (real sync kicked off underneath) ───
+// ─── Screen 2: searching theater (real sync underneath) ──────────────
 function SearchingStep({ role, onDone }) {
   const messages = [
     'Searching trusted job sources…',
@@ -164,11 +263,8 @@ function SearchingStep({ role, onDone }) {
     let count = null;
     let cancelled = false;
 
-    // Kick the real sync + fetch a count in parallel with the animation,
-    // so the "searching" moment is real work, not a fake timer.
     async function run() {
       try {
-        // Trigger a manual sync (Phase 5) so listings are fresh.
         await jobsApi.sync().catch(() => null);
         const res = await jobsApi.list({ search: role, per_page: 5 });
         count = res?.meta?.total ?? 0;
@@ -182,7 +278,6 @@ function SearchingStep({ role, onDone }) {
       setMsgIndex((i) => (i < messages.length - 1 ? i + 1 : i));
     }, 900);
 
-    // Minimum 3.4s of theater so it feels substantial, then reveal.
     const doneTimer = setTimeout(() => {
       if (!cancelled) onDone(count ?? 0);
     }, 3600);
@@ -222,8 +317,8 @@ function ResultsStep({ role, count, onContinue }) {
           {role} {count === 1 ? 'job' : 'jobs'} found
         </h1>
         <p className="mt-2 max-w-sm text-[15px] text-slate">
-          These are live roles from trusted sources. Create your account to save them and unlock
-          AI-ranked matches based on your experience.
+          These are live roles from trusted sources. A couple of quick questions and your
+          dashboard is ready.
         </p>
       </div>
 
@@ -231,89 +326,95 @@ function ResultsStep({ role, count, onContinue }) {
         <div className="flex items-start gap-3">
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
           <div>
-            <p className="font-medium text-ink">Want better matches?</p>
+            <p className="font-medium text-ink">Want sharper matches?</p>
             <p className="mt-1 text-sm text-slate">
-              Once you're in, upload your resume and Applyqik ranks every job against your real
-              experience — so you only chase the ones worth chasing.
+              Tell us a little about how you want to work and we'll rank these to fit — you can
+              always upload your resume later for even better ranking.
             </p>
           </div>
         </div>
       </div>
 
       <Button variant="accent" onClick={onContinue} className="mt-5 w-full">
-        Save these & continue
+        Continue
         <ArrowRight className="h-4 w-4" />
       </Button>
     </div>
   );
 }
 
-// ─── Screen 4: the account (asked last, once value is proven) ────────
-function AccountStep({ role, register, refreshProfile, onDone }) {
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+// ─── Screen 4: light refinement, then finish ─────────────────────────
+function RefineStep({ role, onFinish }) {
+  const [workPref, setWorkPref] = useState('any');
+  const [country, setCountry] = useState('');
+  const [finishing, setFinishing] = useState(false);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError('');
-    setFieldErrors({});
-    setLoading(true);
+  const WORK_PREFS = [
+    { value: 'remote', label: 'Remote' },
+    { value: 'hybrid', label: 'Hybrid' },
+    { value: 'onsite', label: 'On-site' },
+    { value: 'any', label: 'Any' },
+  ];
+
+  async function finish() {
+    setFinishing(true);
     try {
-      await register(form.name, form.email, form.password);
-      // Seed their first preference from the role they told us — so the
-      // dashboard isn't empty and matching has something to work with.
-      await prefsApi.create({ desired_title: role, work_preference: 'any', priority: 1 }).catch(() => null);
-      await profileApi.update({ preferred_roles: [role] }).catch(() => null);
-      await refreshProfile();
-      onDone();
-    } catch (err) {
-      if (err.errors) setFieldErrors(err.errors);
-      else setError(err.message || 'Something went wrong.');
+      await onFinish({ work_preference: workPref, country: country.trim() || null });
     } finally {
-      setLoading(false);
+      setFinishing(false);
     }
   }
 
   return (
     <div className="animate-fade-up">
       <h1 className="font-display text-[28px] font-semibold leading-tight text-ink">
-        Almost there — save your progress
+        Help us refine your {role} matches
       </h1>
-      <p className="mt-2 text-[15px] text-slate">
-        Create your account so your {role} matches are waiting when you come back.
-      </p>
+      <p className="mt-2 text-[15px] text-slate">Two quick questions. You can change these anytime.</p>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-        <Field label="Name" error={fieldErrors.name}>
-          <input value={form.name} onChange={set('name')} className="input" placeholder="Your name" required />
-        </Field>
-        <Field label="Email" error={fieldErrors.email}>
-          <input type="email" value={form.email} onChange={set('email')} className="input" placeholder="you@example.com" required />
-        </Field>
-        <Field label="Password" error={fieldErrors.password}>
-          <input type="password" value={form.password} onChange={set('password')} className="input" placeholder="At least 8 characters" required minLength={8} />
-        </Field>
+      <div className="mt-7 space-y-6">
+        <div>
+          <label className="mb-2 flex items-center gap-2 text-sm font-medium text-ink-soft">
+            <Globe className="h-4 w-4 text-slate" />
+            How do you want to work?
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {WORK_PREFS.map((w) => (
+              <button
+                key={w.value}
+                type="button"
+                onClick={() => setWorkPref(w.value)}
+                className={`rounded-pill border px-4 py-2 text-sm font-medium transition-colors ${
+                  workPref === w.value
+                    ? 'border-ink bg-ink text-white'
+                    : 'border-line bg-surface text-slate hover:text-ink'
+                }`}
+              >
+                {w.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-        {error && <p className="rounded-lg bg-danger/8 px-3 py-2 text-sm text-danger">{error}</p>}
+        <div>
+          <label className="mb-2 flex items-center gap-2 text-sm font-medium text-ink-soft">
+            <MapPin className="h-4 w-4 text-slate" />
+            Preferred country{' '}
+            <span className="font-normal text-slate-soft">(optional)</span>
+          </label>
+          <input
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            placeholder="e.g. Nigeria, or leave blank for anywhere"
+            className="input"
+          />
+        </div>
+      </div>
 
-        <Button type="submit" variant="accent" loading={loading} className="w-full">
-          Create account & see matches
-          <ArrowRight className="h-4 w-4" />
-        </Button>
-      </form>
-    </div>
-  );
-}
-
-function Field({ label, error, children }) {
-  return (
-    <div>
-      <label className="mb-1.5 block text-sm font-medium text-ink-soft">{label}</label>
-      {children}
-      {error && <p className="mt-1 text-xs text-danger">{Array.isArray(error) ? error[0] : error}</p>}
+      <Button variant="accent" onClick={finish} loading={finishing} className="mt-8 w-full">
+        Finish & open my dashboard
+        <ArrowRight className="h-4 w-4" />
+      </Button>
     </div>
   );
 }
