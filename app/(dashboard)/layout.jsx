@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ToastProvider } from '@/components/ui/Toast';
 import Sidebar from '@/components/layout/Sidebar';
 import MobileNav from '@/components/layout/MobileNav';
+import "./onboardingToDashboard.css"
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
@@ -14,12 +15,14 @@ export default function DashboardLayout({ children }) {
   // Route guard: bounce unauthenticated users to onboarding.
   useEffect(() => {
     if (!loading && !isAuthenticated) router.replace('/signin');
-  }, [isAuthenticated, loading, router]);
 
-  if (!onboardingComplete) {
+    if (!onboardingComplete) {
       router.replace('/onboarding');
       return;
-  }
+    }
+
+  }, [isAuthenticated, loading, router, onboardingComplete]);
+
 
   if (loading) {
     return (
@@ -33,7 +36,7 @@ export default function DashboardLayout({ children }) {
 
   return (
     <ToastProvider>
-      <div className="flex min-h-screen bg-[var(--background)] md:p-3">
+      <div className="flex min-h-screen bg-background md:p-3">
         <Sidebar />
         <main className="flex-1 pb-20 md:pb-96 lg:pb-0 ">
           <div className="mx-auto max-w-5xl px-5 py-6 md:px-8 md:py-8">{children}</div>

@@ -21,6 +21,8 @@ export default function MatchesPage() {
     try {
       const res = await matchesApi.list({ min_score: minScore || undefined, per_page: 30 });
       setItems(res.matches ?? []);
+      console.log('the jobs', items);
+      
     } catch (err) {
       toast(err.message, 'error');
     } finally {

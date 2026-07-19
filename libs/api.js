@@ -139,7 +139,7 @@ export const matches = {
 // ─── Saved jobs (Phase 7) ────────────────────────────────────────────
 export const savedJobs = {
   list: (params = {}) => apiFetch(`/saved-jobs${toQuery(params)}`),
-  save: (jobListingId) => apiFetch('/saved-jobs', { method: 'POST', body: { job_listing_id: jobListingId } }),
+  save: (jobListingId) => apiFetch('/saved-jobs', { method: 'POST', body: { gig_id: jobListingId } }),
   remove: (id) => apiFetch(`/saved-jobs/${id}`, { method: 'DELETE' }),
 };
 

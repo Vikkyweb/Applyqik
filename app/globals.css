@@ -12,14 +12,14 @@
   --border: #E5E7EB;
 
   /* dashboard styles */
-  --ecogreen: #0FB981;
+  /* --ecogreen: #0FB981;
   --ecogreendark: #0A7D57;
   --ecoblue: #5B8DEF;
   --ecoorange: #E8894A;
   --ecostandby: #6B7280;
   --econavy: #16181D;
   --ecosagelight: #EAF3EC;
-  --ecobackground: #C9CDC9;
+  --ecobackground: #C9CDC9; */
 
 }
 
@@ -36,14 +36,14 @@
   --border: #1E293B;
 
   /* dashboard styles */
-  --ecogreen: #0FB981;
+  /* --ecogreen: #0FB981;
   --ecogreendark: #0A7D57;
   --ecoblue: #5B8DEF;
   --ecoorange: #E8894A;
   --ecostandby: #6B7280;
   --econavy: #16181D;
   --ecosagelight: #EAF3EC;
-  --ecobackground: #C9CDC9;
+  --ecobackground: #C9CDC9; */
 
 }
 
@@ -64,14 +64,14 @@
   --font-mono: var(--font-geist-mono);
 
   /* dashboard styles */
-  --color-ecogreen: var(--ecogreen);
+  /* --color-ecogreen: var(--ecogreen);
   --color-ecogreendark: var(--ecogreendark);
   --color-ecoblue: var(--ecoblue);
   --color-ecoorange: var(--ecoorange);
   --color-ecostandby: var(--ecostandby);
   --color-econavy: var(--econavy);
   --color-ecosagelight: var(--ecosagelight);
-  --color-ecobackground: var(--ecobackground);
+  --color-ecobackground: var(--ecobackground); */
 
 }
 

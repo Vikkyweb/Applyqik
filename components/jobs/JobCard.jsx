@@ -19,6 +19,8 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
     if (saving) return;
     setSaving(true);
     try {
+      console.log('pickedd', job.id);
+      
       if (!saved) {
         await savedApi.save(job.id);
         setSaved(true);

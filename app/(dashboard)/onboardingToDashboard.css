@@ -1,4 +1,4 @@
-/* Skeleton shimmer */
+/* Skeleton shimmer
 .shimmer {
   position: relative;
   overflow: hidden;
@@ -29,4 +29,4 @@
   .shimmer::after {
     animation: none;
   }
-}
+} */

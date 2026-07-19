@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 // Icon-only rail, matching the reference: dark rounded column, logo tile up top,
 // stacked icon buttons, avatar pinned to the bottom.
 const NAV = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+  { href: '/overview', label: 'Overview', icon: LayoutGrid },
   { href: '/matches', label: 'Matches', icon: Sparkles },
   { href: '/jobs', label: 'Jobs', icon: Briefcase },
   { href: '/applications', label: 'Applications', icon: FileText },
