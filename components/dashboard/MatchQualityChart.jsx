@@ -24,7 +24,7 @@ export default function MatchQualityChart({ data }) {
   const rows = data?.length ? data : FALLBACK;
 
   return (
-    <div className="rounded-2xl bg-white p-5 ring-1 ring-black/5 sm:p-6">
+    <div className="rounded-2xl bg-card p-5 ring-1 ring-black/5 sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <h3 className="font-display text-lg font-bold text-ink">Match Quality</h3>
         <button className="flex shrink-0 items-center gap-1 rounded-full border border-line px-3 py-1.5 text-xs font-medium text-slate">

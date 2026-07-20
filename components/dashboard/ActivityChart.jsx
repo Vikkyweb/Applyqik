@@ -36,7 +36,7 @@ export default function ActivityChart({ data }) {
   const maxVal = Math.max(...rows.map((r) => r.value), 1);
 
   return (
-    <div className="rounded-2xl bg-white p-5 ring-1 ring-black/5 sm:p-6">
+    <div className="rounded-2xl bg-card p-5 ring-1 ring-black/5 sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-display text-lg font-bold text-ink">Job Activity</h3>

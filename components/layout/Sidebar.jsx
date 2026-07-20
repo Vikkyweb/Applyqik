@@ -20,7 +20,7 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="hidden shrink-0 lg:flex fixed bottom-0 left-0 z-40 w-full items-center justify-center bg-ink md:top-0 md:h-auto md:w-[76px]
+    <aside className="hidden shrink-0 lg:flex fixed bottom-0 left-0 z-40 w-full items-center justify-center bg-card md:top-0 md:h-auto md:w-[76px]
      md:flex-col md:justify-start md:gap-8 md:py-6 md:px-0">
       <div className="flex w-[76px] flex-col items-center justify-between rounded-[28px] bg-ink py-5">
         {/* Logo tile */}
@@ -40,7 +40,7 @@ export default function Sidebar() {
                   href={item.href}
                   title={item.label}
                   className={`group relative flex h-11 w-11 items-center justify-center rounded-2xl transition-colors ${
-                    active ? 'bg-white/10 text-accent' : 'text-white/50 hover:bg-white/5 hover:text-white'
+                    active ? 'bg-white/10 text-accent' : 'text-foreground hover:bg-black/5 hover:text-black dark::hover:bg-white/5 '
                   }`}
                 >
                   <Icon className="h-[20px] w-[20px]" />

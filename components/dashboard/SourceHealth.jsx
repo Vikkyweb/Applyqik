@@ -8,7 +8,7 @@ export default function SourceHealth({ sources }) {
   const anyActive = list.some((s) => s.status === 'active');
 
   return (
-    <div className="flex flex-col rounded-2xl bg-white p-5 ring-1 ring-black/5">
+    <div className="flex flex-col rounded-2xl bg-card p-5 ring-1 ring-black/5">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-base font-bold text-ink">Source Health</h3>
         <button aria-label="More options" className="text-slate-soft">
