@@ -55,7 +55,7 @@ export default function SignUpPage() {
       <div
         className="
           w-full max-w-[420px]
-          sm:max-w-[560px] sm:rounded-2xl sm:bg-[#F5F6F4] sm:p-6 sm:shadow-[0_10px_40px_-12px_rgba(31,42,46,0.18)]
+          sm:max-w-[560px] sm:rounded-2xl bg-card sm:p-6 sm:shadow-[0_10px_40px_-12px_rgba(31,42,46,0.18)]
           lg:max-w-[1180px] lg:overflow-hidden lg:p-0 lg:px-6 lg:pt-10
         "
       >
