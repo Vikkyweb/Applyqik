@@ -3,10 +3,10 @@
 import { Loader2 } from 'lucide-react';
 
 const VARIANTS = {
-  primary: 'btn-primary',
-  accent: 'btn-accent',
-  ghost: 'btn-ghost',
-  outline: 'btn-outline',
+  primary: 'primary',
+  accent: 'accent',
+  ghost: 'ghost',
+  outline: 'outline',
 };
 
 export default function Button({

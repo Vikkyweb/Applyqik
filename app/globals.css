@@ -9,6 +9,7 @@
   --secondary: #7C3AED;
   --accent: #22D3EE;
   --success: #10B981;
+  --danger: #f73838;
   --border: #E5E7EB;
   --card: #ffffff;
 
@@ -24,6 +25,7 @@
   --secondary: #A78BFA;
   --accent: #67E8F9;
   --success: #34D399;
+  --danger: #f73838;
   --border: #1E293B;
   --card: #232833;
 
@@ -40,6 +42,7 @@
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-success: var(--success);
+  --color-danger: var(--danger);
   --color-border: var(--border);
   --color-card: var(--card);
 
@@ -58,7 +61,7 @@ body {
 }
 
 
-a{
+a, button {
   cursor: pointer;
 }
 

@@ -89,16 +89,16 @@ export default function DashboardPage() {
         </div>
 
         <div className="relative ml-auto hidden w-full max-w-sm sm:block">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-soft" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground" />
           <Link
             href="/jobs"
-            className="block truncate rounded-full border border-line bg-surface py-2.5 pl-11 pr-4 text-sm text-slate-soft hover:border-line-strong"
+            className="block truncate rounded-full ring-1 ring-black/5 bg-card py-2.5 pl-11 pr-4 text-sm text-foreground"
           >
             Search…
           </Link>
         </div>
 
-        <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-slate hover:text-ink">
+        <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 ring-black/5 bg-card text-slate hover:text-ink">
           <Bell className="h-[18px] w-[18px]" />
         </button>
       </div>

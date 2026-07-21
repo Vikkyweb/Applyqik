@@ -9,7 +9,7 @@ export default function StatCard({
   positive = true,
 }) {
   return (
-    <div className="flex flex-1 items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-black/5  sm:gap-4">
+    <div className="flex flex-1 items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-black/5 sm:gap-4">
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-line-soft">
         <Icon className="h-5 w-5 text-foreground" strokeWidth={1.8} />
       </div>
@@ -23,7 +23,7 @@ export default function StatCard({
             <span
               className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                 positive
-                  ? 'bg-success-soft text-success-ink'
+                  ? 'bg-success-soft text-success'
                   : 'bg-red-50 text-red-500'
               }`}
             >

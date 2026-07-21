@@ -1,4 +1,4 @@
-/* Skeleton shimmer
+/* Skeleton shimmer */
 .shimmer {
   position: relative;
   overflow: hidden;
@@ -29,4 +29,23 @@
   .shimmer::after {
     animation: none;
   }
-} */
+}
+
+.field {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid #e5e3dd;
+  background: #ffffff;
+  padding: 0.9rem 1.1rem;
+  font-size: 15px;
+  color: #16181d;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field::placeholder {
+  color: #b7bdc0;
+}
+.field:focus {
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 4px rgba(57, 21, 110, 0.12);
+}
