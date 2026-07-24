@@ -65,22 +65,22 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <h3 className="font-display text-[16px] font-bold leading-snug text-foreground sm:text-[17px]">
-              {job.title}
+              {job ?.title}
             </h3>
             {match && <ScoreBadge score={match.match_score} size="lg" />}
           </div>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-foreground">
             <span className="inline-flex items-center gap-1.5">
               <Building2 className="h-3.5 w-3.5 shrink-0" />
-              {job.company_name}
+              {job ?.company_name}
             </span>
-            {job.location && (
+            {job ?.location && (
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 shrink-0" />
-                {job.location}
+                {job ?.location}
               </span>
             )}
-            {job.remote && (
+            {job ?.remote && (
               <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-ink">
                 Remote
               </span>
@@ -115,7 +115,7 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
 
       <div className="mt-4 flex flex-wrap items-center gap-2.5">
         <a
-          href={job.apply_url}
+          href={job?.apply_url}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
@@ -137,9 +137,9 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
             'Track application'
           )}
         </button>
-        {job.source && (
+        {job?.source && (
           <span className="ml-auto font-mono text-[11px] font-medium uppercase tracking-wide text-slate-soft">
-            {job.source}
+            {job?.source}
           </span>
         )}
       </div>

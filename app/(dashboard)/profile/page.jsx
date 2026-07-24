@@ -48,8 +48,10 @@ export default function ProfilePage() {
         bio: p.bio ?? '',
         country: p.location?.country ?? '',
         city: p.location?.city ?? '',
+        linkedin_url: p.links.linkedin ?? '',
+        github_url: p.links.github ?? '',
         work_preference: p.preferences?.work_preference ?? 'any',
-        portfolio_url: p.lforegrounds?.portfolio ?? '',
+        portfolio_url: p.links.portfolio ?? '',
         preferred_roles: p.preferences?.roles ?? [],
       });
     } catch (err) {
@@ -213,13 +215,34 @@ export default function ProfilePage() {
               </div>
             </div>
 
+            {/* Linkedin -- full width */}
+            <div className="mt-6">
+              <p className="mb-2 text-[15px] font-semibold text-foreground">LinkedIn Url</p>
+              <input
+                value={form.linkedin_url}
+                onChange={set('linkedin_url')}
+                placeholder="https://www.linkedin.com/in/john/"
+                className="field"
+              />
+            </div>
+            {/* Github -- full width */}
+            <div className="mt-6">
+              <p className="mb-2 text-[15px] font-semibold text-foreground">Github Url</p>
+              <input
+                value={form.github_url}
+                onChange={set('github_url')}
+                placeholder="https://github.com/john/"
+                className="field"
+              />
+            </div>
+
             {/* Portfolio -- full width */}
             <div className="mt-6">
               <p className="mb-2 text-[15px] font-semibold text-foreground">Portfolio / website</p>
               <input
                 value={form.portfolio_url}
                 onChange={set('portfolio_url')}
-                placeholder="https://dkingstech.com"
+                placeholder="https://portfolio.com"
                 className="field"
               />
             </div>

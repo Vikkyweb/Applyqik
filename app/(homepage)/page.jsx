@@ -14,7 +14,7 @@ import PricingPage from '@/app/(homepage)/pricing/page';
 export default function Homepage() {
 
   return (
-    <div className="min-h-dvh bg-white text-black">
+    <div className="min-h-dvh  text-black">
       <HeroDiagram />
 
       <ProblemSolutionSection />

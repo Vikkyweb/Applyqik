@@ -129,7 +129,7 @@ export default function ApplicationsPage() {
                     <select
                       value={app.status}
                       onChange={(e) => changeStatus(app.id, e.target.value)}
-                      className="cursor-pointer appearance-none rounded-full border border-line bg-card px-4 py-2 pr-9 text-[13px] font-medium capitalize text-foreground outline-none transition-colors focus:border-secondary"
+                      className="cursor-pointer appearance-none rounded-xl ring-2 ring-black/50 bg-card px-4 py-2 pr-9 text-[13px] font-medium capitalize text-foreground outline-none transition-colors focus:border-secondary"
                     >
                       {STATUSES.map((s) => (
                         <option key={s} value={s}>

@@ -133,7 +133,7 @@ export default function MatchesPage() {
                   variant="accent"
                   onClick={refresh}
                   loading={syncing}
-                  className="rounded-full px-6 py-3 text-[15px] font-semibold"
+                  className="rounded-xl bg-secondary text-white ring-secondary/5 flex gap-2 px-6 py-3 text-[15px] font-semibold"
                 >
                   <RefreshCw className="h-4 w-4" />
                   Run a search

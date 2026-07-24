@@ -23,6 +23,7 @@ import { LuArrowBigRight } from 'react-icons/lu';
 import { AnimatePresence, motion } from 'framer-motion';
 import ThemeSwitcher from './ThemeSwitcher';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Mega-menu content for the "Features" nav item.
 // Two link columns + a live preview card, mirroring how the product actually helps.
@@ -91,11 +92,24 @@ export default function Header() {
       <header className="sticky top-0 z-50 bg-background border-b border-border">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
-            <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-              ⚓
-            </div>
-            <span className="font-black text-lg tracking-tight">Applyqik</span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logos/logo-black.png"
+              width={200}
+              height={150}
+              alt="Applyqik Logo"
+              className="block dark:hidden"
+              priority
+            />
+
+            <Image
+              src="/logos/logo-white.png"
+              width={200}
+              height={150}
+              alt="Applyqik Logo"
+              className="hidden dark:block"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

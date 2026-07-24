@@ -98,7 +98,7 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 ring-black/5 bg-card text-slate hover:text-ink">
+        <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 ring-black/5 bg-card text-slate hover:text-secondary">
           <Bell className="h-[18px] w-[18px]" />
         </button>
       </div>
@@ -163,7 +163,7 @@ export default function DashboardPage() {
             <p className="mt-1 text-sm text-slate">
               Run a search to pull in fresh roles, or upload your resume to unlock AI ranking.
             </p>
-            <button onClick={runHunt} disabled={syncing} className="btn-accent mt-4 px-5 py-3">
+            <button onClick={runHunt} disabled={syncing} className="bg-secondary text-white ring-secondary/5 rounded-xl mt-4 px-5 py-3">
               Run your first search
             </button>
           </div>

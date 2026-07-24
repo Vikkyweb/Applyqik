@@ -47,3 +47,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
     "We help people get to better opportunities faster with less work."
     "JobPilot helps professionals spend less time searching and more time applying to jobs they're actually qualified for."
+
+    Why do you think it's only the heuristic that's currently matching jobs? is it because i have not subscribed the ai? also i noticed the job are not matching correctly

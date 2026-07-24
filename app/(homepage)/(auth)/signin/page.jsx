@@ -9,6 +9,7 @@ import LeftIllustration from "@/components/Illustrations/LeftIllustration";
 import RightIllustration from "@/components/Illustrations/RightIllustration";
 import { useAuth } from "@/context/AuthContext";
 import Button from "@/components/ui/Button";
+import Image from "next/image";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -59,13 +60,19 @@ export default function SignInPage() {
           <div className="flex w-full justify-center lg:w-auto lg:shrink-0">
             <div className="w-full max-w-[420px] rounded-xl bg-white p-7 shadow-[0_1px_2px_rgba(31,42,46,0.06),0_8px_24px_-8px_rgba(31,42,46,0.12)] sm:p-9">
               {/* Logo */}
-              <div className="mb-7 flex items-center gap-2">
-                <span className="text-[28px] font-extrabold tracking-tight text-primary">
-                  Applyqik
-                </span>
+              <div className="mb-7 flex items-center text-center">
+                <Link href={'/'}>
+                  <Image
+                    src="/logos/logo-black.png"
+                    width={200}
+                    height={150}
+                    alt="Applyqik Logo"
+                    priority
+                  />
+                </Link>
               </div>
 
-              <h1 className="text-[22px] font-bold leading-tight text-[#1F2A2E] sm:text-[24px]">
+              <h1 className="text-[22px] font-bold leading-tight text-[#1F2A2E] sm:text-[22px]">
                 Welcome back to Applyqik.
               </h1>
               <p className="mt-1.5 text-[14px] text-[#6B7573]">
