@@ -8,14 +8,15 @@
 // screens instead of overflowing or squeezing the source label off-card.
 
 import { useState } from 'react';
-import { MapPin, Building2, Bookmark, ExternalLink, Check } from 'lucide-react';
+import { MapPin, Building2, Bookmark, ExternalLink, Check, Sparkles } from 'lucide-react';
 import ScoreBadge from '@/components/ui/ScoreBadge';
 import { savedJobs as savedApi, applications as appsApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
+import Link from 'next/link';
 
 // One card, reused for plain listings and scored matches.
 // `match` is optional -- when present we show the score + why-it-fits.
-export default function JobCard({ job, match, saved: initialSaved = false, onOpen }) {
+export default function JobCard({ job, match, saved: initialSaved = false, onOpen, onPrepare }) {
   const { toast } = useToast();
   const [saved, setSaved] = useState(initialSaved);
   const [saving, setSaving] = useState(false);
@@ -106,7 +107,7 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
       {match?.matched_keywords?.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {match.matched_keywords.slice(0, 4).map((kw) => (
-            <span key={kw} className="rounded-full bg-[#F1F0EB] px-2.5 py-1 text-xs text-ink-soft">
+            <span key={kw} className="rounded-xl bg-[#F1F0EB] px-2.5 py-1 text-xs text-ink-soft">
               {kw}
             </span>
           ))}
@@ -114,20 +115,20 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
       )}
 
       <div className="mt-4 flex flex-wrap items-center gap-2.5">
-        <a
+        <Link
           href={job?.apply_url}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center gap-2 rounded-full bg-secondary px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:brightness-105"
+          className="inline-flex items-center gap-2 rounded-xl bg-secondary px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-[#F6F5F1]/50"
         >
           Apply
           <ExternalLink className="h-4 w-4" />
-        </a>
+        </Link>
         <button
           onClick={markApplied}
           disabled={applied}
-          className="inline-flex items-center gap-2 rounded-full ring-1 ring-black/5 bg-background px-5 py-2.5 text-[14px] font-semibold text-ink transition-colors hover:border-gray-300 disabled:opacity-70"
+          className="inline-flex items-center gap-2 rounded-xl ring-1 ring-black/5 bg-background px-5 py-2.5 text-[14px] font-semibold text-ink transition-colors hover:bg-[#F6F5F1]/50 disabled:opacity-70"
         >
           {applied ? (
             <>
@@ -137,6 +138,17 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
             'Track application'
           )}
         </button>
+
+        {onPrepare && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onPrepare(); }}
+            className="inline-flex items-center gap-2 rounded-xl ring-1 ring-black/5 bg-background px-5 py-2.5 text-[14px] font-semibold text-ink transition-colors hover:bg-[#F6F5F1]/50"
+          >
+            <Sparkles className="h-4 w-4 text-accent" />
+            Prepare application
+          </button>
+        )}
+
         {job?.source && (
           <span className="ml-auto font-mono text-[11px] font-medium uppercase tracking-wide text-slate-soft">
             {job?.source}

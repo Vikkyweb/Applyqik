@@ -8,12 +8,13 @@
 // the two-column grid collapses to one column on small screens.
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { User, Upload, FileText, Check, Loader2, AlertCircle } from 'lucide-react';
+import { User, Upload, FileText, Check, Loader2, AlertCircle, Plus } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { profile as profileApi, resume as resumeApi } from '@/libs/api';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
 import Skeleton from '@/components/ui/Skeleton';
+import Link from 'next/link';
 
 const WORK_PREFS = [
   { value: 'remote', label: 'Remote' },
@@ -88,11 +89,19 @@ export default function ProfilePage() {
     <div className="min-h-screen">
       {/* Header bar */}
       <div className="border-b border-black/5 py-6">
-        <div className="mx-auto flex items-center gap-2.5">
-          <User className="h-6 w-6 text-foreground" strokeWidth={2.25} />
-          <h1 className="font-display text-[26px] font-bold leading-none text-foreground sm:text-[30px]">
-            Profile
-          </h1>
+        <div className="mx-auto flex items-between ">
+          <div className="mx-auto flex flex-1 gap-2.5">
+            <User className="h-6 w-6 text-foreground" strokeWidth={2.25} />
+            <h1 className="font-display text-[26px] font-bold leading-none text-foreground sm:text-[30px]">
+              Profile
+            </h1>
+          </div>
+
+          <div className='flex'>
+            <Plus className="h-5 w-5 text-primary" strokeWidth={2.25} />
+            <Link href={'/preferences'} className='text-primary text-[14px]'>Add Preference</Link>
+          </div>
+
         </div>
       </div>
 

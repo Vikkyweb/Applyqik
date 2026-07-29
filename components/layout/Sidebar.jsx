@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, Sparkles, Briefcase, FileText, User, LogOut } from 'lucide-react';
+import { LayoutGrid, Sparkles, Briefcase, FileText, User, LogOut,Settings } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 // Icon-only rail, matching the reference: dark rounded column, logo tile up top,
@@ -12,6 +12,7 @@ const NAV = [
   { href: '/matches', label: 'Matches', icon: Sparkles },
   { href: '/jobs', label: 'Jobs', icon: Briefcase },
   { href: '/applications', label: 'Applications', icon: FileText },
+  { href: '/preferences', label: 'Preference', icon: Settings },
   { href: '/profile', label: 'Profile', icon: User },
 ];
 

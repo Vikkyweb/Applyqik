@@ -15,6 +15,7 @@ import JobCard from '@/components/jobs/JobCard';
 import JobCardSkeleton from '@/components/jobs/JobCardSkeleton';
 import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
+import ReadyToApplyPanel from '@/components/dashboard/ReadyToApplyPanel';
 
 const FILTERS = [
   { label: 'All', value: 0 },
@@ -28,6 +29,7 @@ export default function MatchesPage() {
   const [syncing, setSyncing] = useState(false);
   const [items, setItems] = useState([]);
   const [minScore, setMinScore] = useState(0);
+  const [preparingJob, setPreparingJob] = useState(null); // holds the job object, or null
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -72,6 +74,7 @@ export default function MatchesPage() {
               Matches
             </h1>
           </div>
+
           <Button
             onClick={refresh}
             loading={syncing}
@@ -81,6 +84,9 @@ export default function MatchesPage() {
             <span className="hidden sm:inline">Refresh</span>
           </Button>
         </div>
+          <p className="mt-1.5 text-[13.5px] text-slate block">
+            Ranked for you, based on your profile and resume.
+          </p>
       </div>
 
       <div className="mx-auto space-y-5 py-6 sm:py-8">
@@ -119,8 +125,17 @@ export default function MatchesPage() {
         ) : items.length > 0 ? (
           <div className="space-y-3">
             {items.map((m) => (
-              <JobCard key={m.id} job={m.job} match={m} />
+              <JobCard key={m.id} job={m.job} match={m} onPrepare={() => setPreparingJob(m.job)}/>
             ))}
+
+            {preparingJob && (
+              <ReadyToApplyPanel
+                job={preparingJob}
+                applicationId={null} // pass a real id if one already exists for this job
+                onClose={() => setPreparingJob(null)}
+                onApplied={() => setPreparingJob(null)}
+              />
+            )}
           </div>
         ) : (
           <div className="rounded-[28px] bg-card p-2 sm:p-4">

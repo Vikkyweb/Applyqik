@@ -9,14 +9,14 @@ import EcoIllustration from './EcoIllustration';
 // and two readouts on the right (jobs today / resume score).
 function MiniStat({ label, value, href, sparkline }) {
   return (
-    <Link href={href} className="block rounded-2xl bg-white/70 p-4 ring-1 ring-black/5 backdrop-blur-sm transition-colors hover:bg-white/90">
+    <Link href={href} className="block rounded-2xl bg-card p-4 ring-1 ring-black/5 backdrop-blur-sm transition-colors hover:bg-white/30">
       <div className="mb-6 flex items-start justify-between">
-        <p className="text-[13px] font-medium leading-tight text-ink-soft">{label}</p>
+        <p className="text-[13px] font-medium leading-tight text-foreground">{label}</p>
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm">
           <ArrowUpRight className="h-3.5 w-3.5 text-slate" />
         </span>
       </div>
-      <p className="mb-3 font-display text-2xl font-bold text-ink">{value}</p>
+      <p className="mb-3 font-display text-2xl font-bold text-primary">{value}</p>
       {sparkline ? (
         <svg viewBox="0 0 140 30" className="w-full" preserveAspectRatio="none">
           <polyline points="0,22 20,22 32,6 46,26 60,10 76,10 92,22 108,22 122,8 140,8" fill="none" stroke="#cbd5c3" strokeWidth="2" />
@@ -43,7 +43,7 @@ export default function HeroPanel({ matches, applications, jobsToday, resumeScor
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr_180px]">
         {/* Left: brand copy + mini stats */}
         <div>
-          <h1 className="font-display text-3xl font-extrabold uppercase leading-tight tracking-tight text-ink sm:text-4xl">
+          <h1 className="font-display text-3xl font-extrabold uppercase leading-tight tracking-tight text-foreground sm:text-4xl">
             Your Career
             <br />
             Agent
@@ -60,7 +60,7 @@ export default function HeroPanel({ matches, applications, jobsToday, resumeScor
           <button
             onClick={onRun}
             disabled={running}
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition-all hover:bg-ink-soft active:scale-[0.98] disabled:opacity-50"
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-black transition-all hover:bg-ink-soft active:scale-[0.98] disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${running ? 'animate-spin' : ''}`} />
             {running ? 'Searching…' : 'Run a fresh search'}

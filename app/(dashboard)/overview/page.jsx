@@ -34,6 +34,7 @@ export default function DashboardPage() {
         jobsApi.stats().catch(() => ({ added_today: 0, total_listings: 0, sources: [] })),
         resumeApi.list().catch(() => []),
       ]);
+      
 
       const apps = appRes.applications ?? [];
       const interviews = apps.filter((a) => a.status === 'interview').length;
@@ -136,11 +137,11 @@ export default function DashboardPage() {
       {/* Top matches — Applyqik's real content */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 font-display text-base font-semibold text-ink">
+          <h2 className="flex items-center gap-2 font-display text-base font-semibold text-foreground">
             <Sparkles className="h-4 w-4 text-accent" />
             Top matches
           </h2>
-          <Link href="/matches" className="inline-flex items-center gap-0.5 text-sm font-medium text-accent-ink hover:underline">
+          <Link href="/matches" className="inline-flex items-center gap-0.5 text-sm font-medium text-accent hover:underline">
             View all
             <ChevronRight className="h-4 w-4" />
           </Link>

@@ -120,6 +120,37 @@ export const resume = {
   },
 };
 
+// ── Resume versions (new on the frontend -- Phase 9 backend existed, this
+//    was never wired up client-side) ─────────────────────────────────────
+export const resumeVersions = {
+  create: (resumeId, jobListingId) =>
+    apiFetch(`/resume/${resumeId}/versions`, { method: 'POST', body: { gig_id: jobListingId } }),
+  list: (resumeId) => apiFetch(`/resume/${resumeId}/versions`),
+  get: (versionId) => apiFetch(`/resume-versions/${versionId}`),
+  approve: (versionId) => apiFetch(`/resume-versions/${versionId}`, { method: 'PATCH', body: { status: 'approved' } }),
+ 
+  // PDF download needs raw bytes, not the JSON-envelope path apiFetch expects --
+  // it bypasses apiFetch and hits fetch() directly so we can read a blob.
+  download: async (versionId, filenameHint) => {
+    const token = getToken();
+    const res = await fetch(`${BASE_URL}/resume-versions/${versionId}/download`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) {
+      throw new ApiError('Could not download this resume.', { status: res.status });
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filenameHint || 'resume.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  },
+};
+
 // ─── Jobs (Phase 5 output) ───────────────────────────────────────────
 export const jobs = {
   list: (params = {}) => apiFetch(`/jobs${toQuery(params)}`),
@@ -150,6 +181,31 @@ export const applications = {
   create: (jobId, payload = {}) => apiFetch(`/applications/${jobId}`, { method: 'POST', body: payload }),
   updateStatus: (id, status, notes) =>
     apiFetch(`/applications/${id}/status`, { method: 'PATCH', body: { status, notes } }),
+  attachArtifacts: (applicationId, { resumeVersionId, coverLetterId } = {}) =>
+  apiFetch(`/applications/${applicationId}/artifacts`, {
+    method: 'PATCH',
+    body: {
+      ...(resumeVersionId !== undefined && { resume_version_id: resumeVersionId }),
+      ...(coverLetterId !== undefined && { cover_letter_id: coverLetterId }),
+    },
+  }),
+};
+
+// ─── Cover letters (Phase 9) ──────────────────────────────────────────
+export const coverLetters = {
+  create: ({ gig_id, tone = 'conversational' }) =>
+    apiFetch('/cover-letters', { method: 'POST', body: { gig_id, tone } }),
+ 
+  list: (params = {}) => apiFetch(`/cover-letters${toQuery(params)}`),
+ 
+  get: (id) => apiFetch(`/cover-letters/${id}`),
+ 
+  update: (id, payload) => apiFetch(`/cover-letters/${id}`, { method: 'PATCH', body: payload }),
+ 
+  // Convenience wrapper over update() -- moves draft -> approved.
+  approve: (id) => apiFetch(`/cover-letters/${id}`, { method: 'PATCH', body: { status: 'approved' } }),
+ 
+  remove: (id) => apiFetch(`/cover-letters/${id}`, { method: 'DELETE' }),
 };
 
 function toQuery(params) {

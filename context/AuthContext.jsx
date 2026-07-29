@@ -85,7 +85,7 @@ export function AuthProvider({ children }) {
     // onboarding.step ('role') to start from.
     const prof = await profileApi.get().catch(() => null);
     setProfile(prof);
-    return { user: data.user, profile: prof };
+    return { user: data.user };
   }, []);
  
   const logout = useCallback(async () => {
