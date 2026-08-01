@@ -107,7 +107,7 @@ export default function JobCard({ job, match, saved: initialSaved = false, onOpe
       {match?.matched_keywords?.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {match.matched_keywords.slice(0, 4).map((kw) => (
-            <span key={kw} className="rounded-xl bg-[#F1F0EB] px-2.5 py-1 text-xs text-ink-soft">
+            <span key={kw} className="rounded-xl bg-primary px-2.5 py-1 text-xs text-ink-soft">
               {kw}
             </span>
           ))}

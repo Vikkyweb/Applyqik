@@ -2,10 +2,10 @@
 
 // app/(app)/matches/page.jsx
 //
-// Redesigned to match the Profile page's visual language: soft gray canvas,
-// bold header bar with icon, pill filters with a dark fill on the selected
-// pill. Job list sits directly on the canvas -- JobCard already renders as
-// a white card, so no extra wrapper is needed there.
+// ADDED: pagination. Previously fetched a flat per_page:30 with no way to
+// see anything beyond that -- now tracks current/last page and resets to
+// page 1 whenever the score filter changes (a stale page number surviving
+// a filter change could silently land past the new, shorter result set).
 
 import { useEffect, useState, useCallback } from 'react';
 import { Sparkles, RefreshCw, SlidersHorizontal } from 'lucide-react';
@@ -15,6 +15,7 @@ import JobCard from '@/components/jobs/JobCard';
 import JobCardSkeleton from '@/components/jobs/JobCardSkeleton';
 import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
+import Pagination from '@/components/ui/Pagination';
 import ReadyToApplyPanel from '@/components/dashboard/ReadyToApplyPanel';
 
 const FILTERS = [
@@ -29,25 +30,39 @@ export default function MatchesPage() {
   const [syncing, setSyncing] = useState(false);
   const [items, setItems] = useState([]);
   const [minScore, setMinScore] = useState(0);
-  const [preparingJob, setPreparingJob] = useState(null); // holds the job object, or null
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [preparingJob, setPreparingJob] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await matchesApi.list({ min_score: minScore || undefined, per_page: 30 });
+      const res = await matchesApi.list({ min_score: minScore || undefined, page, per_page: 30 });
       setItems(res.matches ?? []);
-      // NOTE: logging `res.matches` here, not `items` -- state setters are
-      // async, so `items` would still hold the previous render's value.
+      setLastPage(res.meta?.last_page ?? 1);
     } catch (err) {
       toast(err.message, 'error');
     } finally {
       setLoading(false);
     }
-  }, [minScore, toast]);
+  }, [minScore, page, toast]);
 
   useEffect(() => {
     load();
   }, [load]);
+
+  // A stale page number from a previous, longer result set could silently
+  // point past the end of a newly-filtered one -- reset to page 1 whenever
+  // the filter itself changes.
+  function selectFilter(value) {
+    setMinScore(value);
+    setPage(1);
+  }
+
+  function changePage(next) {
+    setPage(next);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   async function refresh() {
     setSyncing(true);
@@ -78,15 +93,15 @@ export default function MatchesPage() {
           <Button
             onClick={refresh}
             loading={syncing}
-            className="rounded-xl ring-1 flex gap-2 ring-black/5 bg-card px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/70"
+            className="flex gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-medium text-foreground ring-1 ring-black/5 hover:bg-white/70"
           >
             <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">Refresh</span>
           </Button>
         </div>
-          <p className="mt-1.5 text-[13.5px] text-slate block">
-            Ranked for you, based on your profile and resume.
-          </p>
+        <p className="mt-1.5 block text-[13.5px] text-slate">
+          Ranked for you, based on your profile and resume.
+        </p>
       </div>
 
       <div className="mx-auto space-y-5 py-6 sm:py-8">
@@ -101,11 +116,11 @@ export default function MatchesPage() {
                   key={f.value}
                   type="button"
                   aria-pressed={selected}
-                  onClick={() => setMinScore(f.value)}
-                  className={`bg-card rounded-xl ring-1 ring-black/5 px-5 py-2 text-[14px] font-medium transition-colors duration-150 ${
+                  onClick={() => selectFilter(f.value)}
+                  className={`rounded-xl bg-card px-5 py-2 text-[14px] font-medium ring-1 ring-black/5 transition-colors duration-150 ${
                     selected
                       ? 'bg-secondary text-white ring-secondary/5'
-                      : 'text-foreground hover:ring-secondary/50 hover:text-secondary'
+                      : 'text-foreground hover:text-secondary hover:ring-secondary/50'
                   }`}
                 >
                   {f.label}
@@ -123,20 +138,24 @@ export default function MatchesPage() {
             ))}
           </div>
         ) : items.length > 0 ? (
-          <div className="space-y-3">
-            {items.map((m) => (
-              <JobCard key={m.id} job={m.job} match={m} onPrepare={() => setPreparingJob(m.job)}/>
-            ))}
+          <>
+            <div className="space-y-3">
+              {items.map((m) => (
+                <JobCard key={m.id} job={m.job} match={m} onPrepare={() => setPreparingJob(m.job)} />
+              ))}
+            </div>
+
+            <Pagination currentPage={page} lastPage={lastPage} onPageChange={changePage} className="pt-2" />
 
             {preparingJob && (
               <ReadyToApplyPanel
                 job={preparingJob}
-                applicationId={null} // pass a real id if one already exists for this job
+                applicationId={null}
                 onClose={() => setPreparingJob(null)}
                 onApplied={() => setPreparingJob(null)}
               />
             )}
-          </div>
+          </>
         ) : (
           <div className="rounded-[28px] bg-card p-2 sm:p-4">
             <EmptyState
@@ -148,7 +167,7 @@ export default function MatchesPage() {
                   variant="accent"
                   onClick={refresh}
                   loading={syncing}
-                  className="rounded-xl bg-secondary text-white ring-secondary/5 flex gap-2 px-6 py-3 text-[15px] font-semibold"
+                  className="flex gap-2 rounded-xl bg-secondary px-6 py-3 text-[15px] font-semibold text-white ring-secondary/5"
                 >
                   <RefreshCw className="h-4 w-4" />
                   Run a search

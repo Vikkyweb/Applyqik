@@ -39,7 +39,7 @@ function MiniStat({ label, value, href, sparkline }) {
 
 export default function HeroPanel({ matches, applications, jobsToday, resumeScore, onRun, running }) {
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--eco-sage-light)] via-[#e2e9d8] to-[#c9d4bd] p-5 sm:p-7">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br  via-[#e2e9d8] to-[#c9d4bd] p-5 sm:p-7">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr_180px]">
         {/* Left: brand copy + mini stats */}
         <div>

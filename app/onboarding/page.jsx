@@ -2,9 +2,27 @@
 
 // app/onboarding/page.jsx
 //
-// Sleek, swift, resumable onboarding.
+// FIXED, two real bugs:
 //
-// GUARANTEES
+// BUG A (step repeats after first click): the resume/guard effect re-ran on
+// EVERY onboardingStep context change -- which happens after every
+// successful goTo(), since saveOnboardingStep() updates AuthContext's
+// profile. That effect treats 'searching' as transient and resets to
+// 'role' -- correct for resuming a page load, but it was firing again
+// right after the user advanced PAST role, snapping them straight back.
+// FIX: the "jump to my saved step" logic now runs exactly once, at initial
+// hydration, via hasHydratedRef. After that, this page's own goTo() calls
+// are the sole authority over `step`.
+//
+// BUG B (job count shows 0): onDone(count ?? 0) fired on a FIXED 2.2s
+// timer racing the real network calls (sync + list). If the real request
+// took longer, `count` was still null when the timer fired, reporting a
+// false zero. FIX: the real fetch now drives onDone directly, with a
+// minimum-display-time guarantee layered on top so the theater still feels
+// substantial on a fast connection -- but it never reports before the real
+// result is known.
+//
+// GUARANTEES (unchanged)
 //   1. Not authenticated            -> /signin
 //   2. Already completed onboarding -> /overview (can't re-enter)
 //   3. Authenticated + incomplete   -> resumes from profile.onboarding.step
@@ -45,7 +63,12 @@ export default function OnboardingPage() {
   const [role, setRole] = useState('');
   const [jobCount, setJobCount] = useState(null);
 
-  // -- Guard + resume --------------------------------------------------
+  // BUG A FIX: this ref ensures the "jump to saved step" logic below runs
+  // exactly once per page load, not every time onboardingStep changes as a
+  // side effect of this page's own forward navigation.
+  const hasHydratedRef = useRef(false);
+
+  // -- Guard + resume (runs the step-jump ONCE) -------------------------
   useEffect(() => {
     if (loading) return;
 
@@ -58,7 +81,12 @@ export default function OnboardingPage() {
       return;
     }
 
+    if (hasHydratedRef.current) return;
+    hasHydratedRef.current = true;
+
     // 'searching' is transient -- resume interrupted searches at 'role'.
+    // This only matters for a FRESH page load (tab closed mid-search); it
+    // must never re-fire after the user has already advanced past it.
     const resumeStep = onboardingStep === 'searching' ? 'role' : onboardingStep;
     setRole(onboardingRole ?? '');
     setStep(STEP_ORDER.includes(resumeStep) ? resumeStep : 'role');
@@ -318,17 +346,36 @@ function SearchingStep({ role, onDone }) {
   const [liveCount, setLiveCount] = useState(0);
 
   useEffect(() => {
-    let count = null;
     let cancelled = false;
 
     async function run() {
+      // BUG B FIX: the real fetch now drives onDone directly -- no more
+      // separate fixed-timer racing the network. A minimum display time is
+      // still enforced so the theater feels substantial on a fast
+      // connection, but it NEVER reports a count before the real result is
+      // known (previously: if the network took longer than the fixed 2.2s,
+      // `count` was still null when the old timer fired, reporting a false
+      // zero even when real jobs existed).
+      const MIN_DISPLAY_MS = 2200;
+      const started = Date.now();
+
+      let count = 0;
       try {
         await jobsApi.sync().catch(() => null);
         const res = await jobsApi.list({ search: role, per_page: 5 });
-        count = res?.meta?.total ?? 0;
+        
+        // count = res?.meta?.total ?? 0;
+        count = res.length;
       } catch {
         count = 0;
       }
+
+      const elapsed = Date.now() - started;
+      if (elapsed < MIN_DISPLAY_MS) {
+        await new Promise((resolve) => setTimeout(resolve, MIN_DISPLAY_MS - elapsed));
+      }
+
+      if (!cancelled) onDone(count);
     }
     run();
 
@@ -337,23 +384,18 @@ function SearchingStep({ role, onDone }) {
     }, 700);
 
     // Live-looking counter ticks up toward a placeholder target while the
-    // real request resolves in the background; final value is swapped in
-    // via onDone(count) regardless of what this shows.
+    // real request resolves in the background; the final value shown on
+    // the next screen always comes from the real fetch in run() above,
+    // never from this cosmetic counter.
     const target = 40 + Math.floor(Math.random() * 140);
     const countTimer = setInterval(() => {
       setLiveCount((n) => Math.min(target, n + Math.ceil(target / 14)));
     }, 150);
 
-    // Swift: ~2.2s of theater, then reveal.
-    const doneTimer = setTimeout(() => {
-      if (!cancelled) onDone(count ?? 0);
-    }, 2200);
-
     return () => {
       cancelled = true;
       clearInterval(msgTimer);
       clearInterval(countTimer);
-      clearTimeout(doneTimer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);

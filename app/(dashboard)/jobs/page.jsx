@@ -2,23 +2,17 @@
 
 // app/(app)/jobs/page.jsx
 //
-// FIX: this page previously ran a blind, unfiltered query regardless of who
-// was logged in -- a graphic designer and a warehouse worker saw the exact
-// same first screen. That's not a bug in the search filter itself (verified
-// correct against the real controller), it's that personalization was never
-// applied by default at all. "Browse everything" should be an explicit
-// choice, not the first thing anyone sees.
+// FIXED (real bug, independent of pagination): `setItems(res ?? [])` was
+// assigning the ENTIRE response envelope ({jobs, meta}) to `items`, not
+// the jobs array inside it. `items.map(...)` further down expects an array
+// of job objects -- this would have rendered nothing or crashed depending
+// on the exact shape. Corrected to `setItems(res.jobs ?? [])`.
 //
-// NEW BEHAVIOR:
-//   - On load, fetch the user's preferences (Phase 3) and pick the
-//     highest-priority one as the default search term.
-//   - Falls back to profile.preferences.roles[0] if no preference row exists.
-//   - If neither exists, shows an honest banner pointing to /preferences
-//     instead of silently showing an unfiltered feed with no explanation.
-//   - A visible toggle lets the user deliberately see everything unfiltered
-//     -- "Relevant to me" is the default state, not the only state.
+// ADDED: pagination. Resets to page 1 whenever the search term or the
+// remote-only toggle changes, same reasoning as Matches -- a stale page
+// number from a longer result set could silently land past a shorter one.
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Briefcase, Search, RefreshCw, Target, ArrowRight } from 'lucide-react';
 import { jobs as jobsApi, preferences as prefsApi, profile as profileApi } from '@/libs/api';
@@ -27,6 +21,7 @@ import JobCard from '@/components/jobs/JobCard';
 import JobCardSkeleton from '@/components/jobs/JobCardSkeleton';
 import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
+import Pagination from '@/components/ui/Pagination';
 
 export default function JobsPage() {
   const { toast } = useToast();
@@ -36,15 +31,13 @@ export default function JobsPage() {
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
   const [remoteOnly, setRemoteOnly] = useState(false);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
-  // Personalization state -- resolved once on mount, before the first job
-  // fetch, so the very first screen a user sees is already relevant.
-  const [primaryRole, setPrimaryRole] = useState(null); // string | null
+  const [primaryRole, setPrimaryRole] = useState(null);
   const [resolvingPrefs, setResolvingPrefs] = useState(true);
-  const [relevantMode, setRelevantMode] = useState(true); // the default state
+  const [relevantMode, setRelevantMode] = useState(true);
 
-  // Step 1: figure out what "relevant" means for this user, BEFORE loading
-  // any jobs -- this is what was missing entirely before.
   useEffect(() => {
     let active = true;
     async function resolvePrimaryRole() {
@@ -53,16 +46,11 @@ export default function JobsPage() {
         const list = Array.isArray(prefs) ? prefs : prefs?.preferences ?? [];
 
         if (list.length > 0) {
-          // Highest priority = lowest number (1 is highest, matches the
-          // Preferences page's own convention).
           const top = [...list].sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))[0];
           if (active) setPrimaryRole(top.desired_title ?? null);
           return;
         }
 
-        // No preference rows yet -- fall back to whatever role the profile
-        // (or onboarding) captured, rather than treating "no preferences"
-        // as "show everything with no explanation."
         const prof = await profileApi.get().catch(() => null);
         const fallbackRole = prof?.preferences?.roles?.[0] ?? null;
         if (active) setPrimaryRole(fallbackRole);
@@ -76,9 +64,6 @@ export default function JobsPage() {
     };
   }, []);
 
-  // Step 2: once we know the primary role, seed the search box with it --
-  // but only on first resolution, so it doesn't fight the user if they've
-  // since typed their own search term.
   useEffect(() => {
     if (!resolvingPrefs && primaryRole && relevantMode && search === '') {
       setSearch(primaryRole);
@@ -92,25 +77,47 @@ export default function JobsPage() {
       const res = await jobsApi.list({
         search: search || undefined,
         remote: remoteOnly ? 1 : undefined,
+        page,
         per_page: 25,
       });
-      setItems(res ?? []);
+      // FIX: your real JobListingController returns `data` as the BARE
+      // array of jobs directly, with `meta` as a SIBLING key -- not nested
+      // as `{ jobs: [...] }`. Combined with the apiFetch fix (which now
+      // attaches `meta` onto the returned array), `res` IS the jobs array,
+      // and `res.meta` carries pagination info.
+      setItems(Array.isArray(res) ? res : []);
       setTotal(res.meta?.total ?? 0);
-      
+      setLastPage(res.meta?.last_page ?? 1);
     } catch (err) {
       toast(err.message, 'error');
     } finally {
       setLoading(false);
     }
-  }, [search, remoteOnly, toast]);
+  }, [search, remoteOnly, page, toast]);
 
   useEffect(() => {
-    // Wait for preference resolution before the first fetch, so we never
-    // fire one unfiltered request and then immediately replace it.
     if (resolvingPrefs) return;
-    const t = setTimeout(load, search ? 350 : 0); // debounce search
+    const t = setTimeout(load, search ? 350 : 0);
     return () => clearTimeout(t);
   }, [load, search, resolvingPrefs]);
+
+  // Reset to page 1 whenever the search term changes -- otherwise a page
+  // number from a longer previous result set can silently point past the
+  // end of a new, shorter one.
+  function updateSearch(value) {
+    setSearch(value);
+    setPage(1);
+  }
+
+  function toggleRemoteOnly() {
+    setRemoteOnly((v) => !v);
+    setPage(1);
+  }
+
+  function changePage(next) {
+    setPage(next);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   async function runSync() {
     setSyncing(true);
@@ -125,13 +132,11 @@ export default function JobsPage() {
     }
   }
 
-  // The toggle: switching OFF relevant mode clears the search so the raw,
-  // unranked feed shows -- an explicit, visible choice. Switching back ON
-  // restores the primary role if one exists.
   function toggleRelevantMode() {
     setRelevantMode((wasRelevant) => {
       const nowRelevant = !wasRelevant;
       setSearch(nowRelevant ? (primaryRole ?? '') : '');
+      setPage(1);
       return nowRelevant;
     });
   }
@@ -159,7 +164,7 @@ export default function JobsPage() {
               variant="outline"
               onClick={runSync}
               loading={syncing}
-              className="rounded-xl ring-1 flex gap-2 ring-black/5 bg-card px-4 py-2.5 text-sm font-medium text-foreground hover:ring-secondary/50 hover:text-secondary"
+              className="flex gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-medium text-foreground ring-1 ring-black/5 hover:text-secondary hover:ring-secondary/50"
             >
               <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline">Sync sources</span>
@@ -174,12 +179,10 @@ export default function JobsPage() {
       </div>
 
       <div className="mx-auto space-y-5 py-6 sm:py-8">
-        {/* Honest banner when there's nothing to personalize against yet --
-            never silently fall back to an unexplained unfiltered feed. */}
         {hasNoPreference && (
           <Link
             href="/preferences"
-            className="flex items-center gap-4 rounded-xl ring-1 ring-black/5 bg-accent-soft/40 p-4 transition-colors hover:bg-accent-soft/70"
+            className="flex items-center gap-4 rounded-xl bg-accent-soft/40 p-4 ring-1 ring-black/5 transition-colors hover:bg-accent-soft/70"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft">
               <Target className="h-5 w-5 text-accent" />
@@ -198,28 +201,28 @@ export default function JobsPage() {
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-soft" />
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => updateSearch(e.target.value)}
               placeholder="Search roles, companies, skills..."
-              className="w-full rounded-xl ring-1 ring-black/5 bg-card py-3 pl-11 pr-4 text-[15px] text-foreground outline-none transition-all placeholder:text-foreground focus:ring-secondary"
+              className="w-full rounded-xl bg-card py-3 pl-11 pr-4 text-[15px] text-foreground outline-none ring-1 ring-black/5 transition-all placeholder:text-foreground focus:ring-secondary"
             />
           </div>
           <button
             type="button"
             aria-pressed={remoteOnly}
-            onClick={() => setRemoteOnly((v) => !v)}
-            className={`shrink-0 rounded-xl ring-1 ring-black/5 px-5 py-3 text-[14px] font-medium transition-colors duration-150 ${
+            onClick={toggleRemoteOnly}
+            className={`shrink-0 rounded-xl px-5 py-3 text-[14px] font-medium ring-1 ring-black/5 transition-colors duration-150 ${
               remoteOnly
                 ? 'bg-secondary text-white ring-secondary/5'
-                : 'text-foreground hover:ring-secondary/50 hover:text-secondary'
+                : 'text-foreground hover:text-secondary hover:ring-secondary/50'
             }`}
           >
             Remote only
           </button>
         </div>
 
-        {/* Relevant-to-me toggle -- explicit, visible, on by default */}
+        {/* Relevant-to-me toggle */}
         {primaryRole && (
-          <div className="flex items-center justify-between rounded-xl ring-1 ring-black/5 bg-card px-4 py-3">
+          <div className="flex items-center justify-between rounded-xl bg-card px-4 py-3 ring-1 ring-black/5">
             <div className="flex items-center gap-2.5">
               <Target className="h-4 w-4 text-foreground" />
               <span className="text-[13.5px] font-medium text-foreground">
@@ -233,12 +236,12 @@ export default function JobsPage() {
               aria-checked={relevantMode}
               onClick={toggleRelevantMode}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-                relevantMode ? "bg-secondary" : "bg-gray-300"
+                relevantMode ? 'bg-secondary' : 'bg-gray-300'
               }`}
             >
               <span
                 className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200 ${
-                  relevantMode ? "translate-x-5" : "translate-x-0.5"
+                  relevantMode ? 'translate-x-5' : 'translate-x-0.5'
                 }`}
               />
             </button>
@@ -253,11 +256,15 @@ export default function JobsPage() {
             ))}
           </div>
         ) : items.length > 0 ? (
-          <div className="space-y-3">
-            {items.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
+          <>
+            <div className="space-y-3">
+              {items.map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </div>
+
+            <Pagination currentPage={page} lastPage={lastPage} onPageChange={changePage} className="pt-2" />
+          </>
         ) : (
           <div className="rounded-xl bg-card p-2 sm:p-4">
             <EmptyState

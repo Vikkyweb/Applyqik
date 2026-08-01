@@ -3,7 +3,7 @@
 // standard { success, message, data|errors } envelope, and error shaping
 // so components never touch fetch() directly or parse envelopes themselves.
 
-const BASE_URL = 'http://localhost:8000/api/v1';
+const BASE_URL = 'https://api.applyqik.com/api/v1';
 
 const TOKEN_KEY = 'applyqik_token';
 
@@ -68,7 +68,23 @@ async function apiFetch(path, { method = 'GET', body, auth = true, isForm = fals
   }
 
   // Backend wraps everything in { success, message, data }
-  return json?.data !== undefined ? json.data : json;
+  //
+// with the block below. Non-paginated endpoints (login, profile, single
+// resource fetches) are completely unaffected -- `meta` simply won't be
+// present on those responses, so nothing gets attached. Paginated
+// endpoints now carry `.meta` as a property on the returned data itself
+// (arrays and objects can both hold extra properties in JS), so every
+// existing call site that expects apiFetch to return the resource directly
+// keeps working exactly as before -- callers just gain the ability to read
+// `result.meta` when it's there.
+ 
+  // return json?.data !== undefined ? json.data : json;
+  if (json?.data !== undefined) {
+    if (json.meta !== undefined && json.data && typeof json.data === 'object') {
+      json.data.meta = json.meta;
+    }
+    return json.data;
+  }
 }
 
 function safeParse(text) {
