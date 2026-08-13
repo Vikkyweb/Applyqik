@@ -3,7 +3,8 @@
 // standard { success, message, data|errors } envelope, and error shaping
 // so components never touch fetch() directly or parse envelopes themselves.
 
-const BASE_URL = 'https://api.applyqik.com/api/v1';
+// const BASE_URL = 'https://api.applyqik.com/api/v1';
+const BASE_URL = 'http://127.0.0.1:8000/api/v1';
 
 const TOKEN_KEY = 'applyqik_token';
 

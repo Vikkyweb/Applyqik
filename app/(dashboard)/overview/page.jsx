@@ -78,7 +78,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* Top bar: Dashboard label · search · bell */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-sm font-medium text-slate">
           <span className="grid h-4 w-4 grid-cols-2 gap-0.5">
             <span className="rounded-[1px] bg-slate-soft" />
