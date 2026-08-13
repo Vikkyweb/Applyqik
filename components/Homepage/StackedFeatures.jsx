@@ -50,7 +50,7 @@ const STEPS = [
     ],
     icon: Search,
     accent: '#6C5CE7', // indigo
-    screenshot: '/screenshots/one.png',
+    screenshot: '/screenshots/step-one.png',
   },
   {
     id: '02',
@@ -65,7 +65,7 @@ const STEPS = [
     ],
     icon: Target,
     accent: '#39C6A8', // mint
-    screenshot: '/screenshots/two.png',
+    screenshot: '/screenshots/step-two.png',
   },
   {
     id: '03',
@@ -80,7 +80,7 @@ const STEPS = [
     ],
     icon: FileCheck2,
     accent: '#E8A33D', // amber
-    screenshot: '/screenshots/three.png',
+    screenshot: '/screenshots/step-three.png',
   },
   {
     id: '04',
@@ -95,7 +95,7 @@ const STEPS = [
     ],
     icon: Mail,
     accent: '#E85D75', // coral
-    screenshot: '/screenshots/one.png',
+    screenshot: '/screenshots/step-four.png',
   },
   {
     id: '05',
@@ -110,11 +110,11 @@ const STEPS = [
     ],
     icon: KanbanSquare,
     accent: '#4FA3E3', // sky
-    screenshot: '/screenshots/three.png',
+    screenshot: '/screenshots/step-five.png',
   },
 ];
 
-const STEP_HEIGHT = 'h-[150vh] sm:h-[170vh] last:h-screen';
+const STEP_HEIGHT = 'h-[150vh] sm:h-[80vh] last:h-screen';
 const BASE_TOP = 'top-[3rem] sm:top-[3.5rem]';
 
 export default function StackedFeatures() {
@@ -174,10 +174,10 @@ function StackRow({ step, index, total }) {
           }
           className="w-full max-w-6xl rounded-2xl sm:rounded-[2rem] border border-white/10 bg-[#12141B] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.65)] overflow-hidden"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-10 lg:gap-16 items-center p-6 sm:p-12 lg:p-16">
+          <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 lg:gap-10 items-center p-4 sm:p-6 lg:p-8">
             {/* Screenshot side */}
             <div
-              className="order-1 lg:order-none flex items-center justify-center py-4 lg:py-0 rounded-2xl"
+              className="order-1 lg:order-none flex items-center justify-center py-2 lg:py-0"
               style={{
                 background: `radial-gradient(circle at 30% 20%, ${step.accent}1F 0%, transparent 65%)`,
               }}
@@ -239,26 +239,26 @@ function ScreenshotFrame({ src, alt, accent, label }) {
   const showPlaceholder = !src || failed;
 
   return (
-    <div className="relative w-full max-w-[280px]">
+    <div className="relative w-full">
       <span
-        className="absolute -top-3 left-5 z-10 text-[10px] font-semibold tracking-[0.1em] uppercase px-2.5 py-1 rounded-full"
+        className="absolute -top-3 left-2 z-10 text-[10px] font-semibold tracking-[0.1em] uppercase px-2.5 py-1 rounded-full"
         style={{ backgroundColor: accent, color: '#0B0D12' }}
       >
         {label}
       </span>
 
-      <div className="relative aspect-[9/19.5] rounded-[2.25rem] border-[6px] border-[#1B1E27] bg-[#0B0D12] overflow-hidden">
+      <div className="relative w-full min-h-[280px] lg:min-h-[340px]">
         {!showPlaceholder ? (
           <Image
             src={src}
             alt={alt}
             fill
-            sizes="280px"
-            className="object-cover"
+            sizes="(max-width: 1024px) 90vw, 380px"
+            className="object-contain object-center"
             onError={() => setFailed(true)}
           />
         ) : (
-          <div className="absolute inset-2 flex flex-col items-center justify-center gap-2 rounded-[1.75rem] border-2 border-dashed border-white/10 px-4 text-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-white/10 px-4 text-center">
             <ImageOff size={20} className="text-white/25" />
             <span className="text-[10px] leading-relaxed text-white/35">
               Add screenshot at
@@ -267,9 +267,6 @@ function ScreenshotFrame({ src, alt, accent, label }) {
             </span>
           </div>
         )}
-
-        {/* Notch */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-4 w-20 bg-[#1B1E27] rounded-b-xl z-10" />
       </div>
     </div>
   );
